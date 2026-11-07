@@ -1,0 +1,62 @@
+{
+  "titre": "Trajectoire de référence à politique inchangée (Belgique, ensemble des administrations publiques)",
+  "note": "2025 : comptes (Eurostat, avril 2026). 2026-2028 : projections de la BNB (juin 2026). 2029-2031 : interpolation du site entre la BNB 2028 et le BFP 2031 (juin 2026 : déficit de 6,4 % et dette d'environ 122 % du PIB, charges d'intérêts de 3,5 % du PIB). Le déflateur du PIB est une hypothèse du site, cohérente avec l'inflation projetée par la BNB et le BFP. Aucune mesure nouvelle au-delà de celles déjà décidées (dont l'accord budgétaire du 24 novembre 2025) ; le budget 2027 n'est pas voté.",
+  "annees": [2025, 2026, 2027, 2028, 2029, 2030, 2031],
+  "croissanceReelle": [1.0, 0.6, 1.1, 1.3, 1.4, 1.3, 1.2],
+  "deflateur": [2.6, 3.0, 2.4, 2.0, 1.9, 1.8, 1.8],
+  "pib2025": 641.3,
+  "solde": [-5.2, -5.3, -5.5, -5.7, -6.0, -6.2, -6.4],
+  "soldePrimaire": [-2.9, -2.8, -2.7, -2.7, -2.8, -2.8, -2.9],
+  "dette": [107.9, 111.3, 112.9, 114.8, 117.3, 119.8, 122.3],
+  "chomage": [6.2, 6.6, 6.6, 6.4, 6.3, 6.1, 6.0],
+  "emploi": [5200, 5216, 5251, 5293, 5339, 5385, 5431],
+  "inflationIPCH": [3.0, 3.4, 2.3, 2.0, 1.8, 1.7, 1.7],
+  "sources": {
+    "croissanceReelle": ["bnb-juin-2026", "bfp-juin-2026"],
+    "solde": ["eurostat-avril-2026", "bnb-juin-2026", "bfp-juin-2026"],
+    "soldePrimaire": ["bnb-juin-2026"],
+    "dette": ["eurostat-avril-2026", "bnb-juin-2026", "bfp-juin-2026"],
+    "chomage": ["bnb-juin-2026"],
+    "emploi": ["bnb-juin-2026", "bfp-juin-2026"],
+    "inflationIPCH": ["bnb-juin-2026", "bfp-juin-2026"]
+  },
+  "estimationSite": {
+    "deflateur": [true, true, true, true, true, true, true],
+    "solde": [false, false, false, false, true, true, false],
+    "soldePrimaire": [false, false, false, false, true, true, true],
+    "dette": [false, false, false, false, true, true, false],
+    "chomage": [false, false, false, false, true, true, true],
+    "emploi": [true, false, false, false, true, true, true]
+  },
+  "entiteI": {
+    "note": "Pouvoir fédéral et sécurité sociale, d'après le Comité de monitoring de juillet 2026.",
+    "deficit2026": {"mdEuros": 25.68, "pctPib": 3.9},
+    "deficit2029": {"mdEuros": 38.275, "pctPib": 5.2},
+    "deficit2031": {"mdEuros": 44.0, "pctPib": 5.7},
+    "effortMinimal2029": 7.7,
+    "effortPour3pct": "environ le double",
+    "source": "cm-juillet-2026"
+  },
+  "budget2026": {
+    "note": "Budget initial 2026 de l'Entité I, d'après le rapport du BFP (p. 3-17), en milliards d'euros.",
+    "depensesEntiteI": 293.5, "depensesPrimaires": 281.2, "recettes": 267.4,
+    "securiteSociale": 147.3, "pensions": 72.3, "soinsDeSante": 41.3, "maladieInvalidite": 15.9, "chomage": 4.6,
+    "transfertsEntites": 81.5, "pouvoirFederal": 41.9, "salairesFederaux": 10.9, "fonctionnement": 8.5,
+    "subsides": 7.9, "investissements": 6.5, "transfertsUE": 9.1, "chargesInterets": 12.3,
+    "recettesFiscalesParafiscales": 164.3, "cotisationsSociales": 93.7, "ipp": 64.2, "isoc": 26.0, "tva": 45.1,
+    "accises": 11.2, "precompteMobilier": 8.0, "recettesNonFiscales": 9.4,
+    "source": "bfp-rapport"
+  },
+  "regles": {
+    "edp": "Procédure de déficit excessif ouverte le 26 juillet 2024 ; correction attendue d'ici 2029 ; tenue en suspens (action suivie d'effets) selon la Commission le 3 juin 2026.",
+    "plafondDepensesNettes": {"2025": 3.6, "2026": 2.5, "2027": 2.5, "2028": 2.1, "2029": 2.1},
+    "clauseDefense": "Clause dérogatoire nationale pour la défense, 2025-2028 (Conseil, 8 juillet 2025).",
+    "sources": ["conseil-edp-2025", "ce-csr-2026"]
+  },
+  "marches": {
+    "olo10ans": "environ 3,5 % en juillet, environ 4,25 % début novembre 2026",
+    "spread": "au-delà de 100 points de base face à l'Allemagne (octobre 2026)",
+    "notation": "S&P : AA-, perspective stable (24 octobre 2026)",
+    "sources": ["economiematin-roi", "lalibre-spread", "lalibre-sp"]
+  }
+}

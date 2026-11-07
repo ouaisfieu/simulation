@@ -1,0 +1,399 @@
+{
+  "note": "Hypothèses du modèle de simulation. Toutes sont des choix du site, documentés sur la page Méthode et modifiables dans le simulateur.",
+  "multiplicateurs": {
+    "note": "Effet sur le niveau du PIB, la première année, d'une impulsion de consolidation de 1 % du PIB, par type de mesure. Trois jeux : doux, central, sévère. Ordres de grandeur compatibles avec la littérature (FMI 2012, Blanchard et Leigh 2013, BNB 2014) ; le jeu sévère reproduit les valeurs observées en crise.",
+    "classes": {
+      "consopub": {
+        "label": "Consommation publique (salaires, fonctionnement)",
+        "doux": 0.5,
+        "central": 0.7,
+        "severe": 1.0
+      },
+      "sante": {
+        "label": "Soins de santé",
+        "doux": 0.4,
+        "central": 0.6,
+        "severe": 0.9
+      },
+      "transf_bas": {
+        "label": "Transferts aux ménages modestes",
+        "doux": 0.5,
+        "central": 0.7,
+        "severe": 0.9
+      },
+      "transf": {
+        "label": "Pensions et autres transferts",
+        "doux": 0.3,
+        "central": 0.5,
+        "severe": 0.7
+      },
+      "index": {
+        "label": "Indexation des revenus",
+        "doux": 0.35,
+        "central": 0.5,
+        "severe": 0.75
+      },
+      "ipp": {
+        "label": "Impôt et cotisations sur le travail",
+        "doux": 0.25,
+        "central": 0.4,
+        "severe": 0.6
+      },
+      "conso": {
+        "label": "TVA",
+        "doux": 0.3,
+        "central": 0.5,
+        "severe": 0.7
+      },
+      "accises": {
+        "label": "Accises et énergie",
+        "doux": 0.25,
+        "central": 0.4,
+        "severe": 0.6
+      },
+      "capital": {
+        "label": "Capital et patrimoine",
+        "doux": 0.05,
+        "central": 0.15,
+        "severe": 0.3
+      },
+      "entreprises": {
+        "label": "Entreprises (Isoc, subsides, cotisations patronales)",
+        "doux": 0.15,
+        "central": 0.3,
+        "severe": 0.5
+      },
+      "exterieur": {
+        "label": "Dépenses à l'étranger ou pour des non-résidents",
+        "doux": 0.05,
+        "central": 0.15,
+        "severe": 0.3
+      },
+      "regions": {
+        "label": "Entités fédérées",
+        "doux": 0.4,
+        "central": 0.6,
+        "severe": 0.9
+      },
+      "fraude": {
+        "label": "Lutte contre la fraude",
+        "doux": 0.1,
+        "central": 0.2,
+        "severe": 0.3
+      },
+      "nul": {
+        "label": "Sans effet macroéconomique",
+        "doux": 0,
+        "central": 0,
+        "severe": 0
+      }
+    },
+    "persistance": [
+      1.0,
+      1.0,
+      0.8,
+      0.6,
+      0.5,
+      0.4
+    ],
+    "persistanceNote": "Part de l'effet de la première année qui subsiste les années suivantes (zone euro : pas de baisse de taux compensatoire propre à la Belgique)."
+  },
+  "semiElasticite": {
+    "valeur": 0.61,
+    "source": "mourre-poissonnier-2019",
+    "note": "Un PIB inférieur de 1 % à la référence dégrade le solde de 0,61 point de PIB (stabilisateurs automatiques)."
+  },
+  "okun": {
+    "valeur": 0.6,
+    "note": "Un PIB inférieur de 1 % réduit l'emploi d'environ 0,6 %."
+  },
+  "fuiteIndexation": {
+    "doux": 0.45,
+    "central": 0.6,
+    "severe": 0.7,
+    "note": "Part du rendement d'une hausse de TVA qui revient en dépenses et en moindres recettes via l'indice santé (salaires et allocations indexés). Calée sur l'exemple du rapport du BFP : 3 Md€ directs, 0,8 Md€ au total, effets macroéconomiques compris. Avec les multiplicateurs centraux, le site obtient environ 0,9 Md€.",
+    "source": "bfp-rapport"
+  },
+  "erosionCapital": {
+    "doux": 0.1,
+    "central": 0.2,
+    "severe": 0.35,
+    "note": "Part du rendement des impôts sur le capital et le patrimoine perdue par évitement, délocalisation des avoirs et réorganisation des portefeuilles. Quand plusieurs impôts frappent le même capital (globalisation, impôt sur la fortune, plus-values, loyers, cotisation sur les revenus mobiliers), l'érosion augmente de 4 points par famille supplémentaire active, plafonnée à 50 %.",
+    "cumul": 0.04,
+    "plafond": 0.5,
+    "famillesCapital": [
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F13d"
+    ]
+  },
+  "repercussionRegions": {
+    "valeur": 0.3,
+    "note": "Part d'une charge transférée aux entités fédérées qui se traduit par une baisse de leurs dépenses plutôt que par un déficit régional plus élevé."
+  },
+  "tauxMarche": {
+    "valeur": 3.8,
+    "note": "Taux auquel l'État emprunte à la marge (OLO à dix ans entre 3,5 % et 4,3 % au second semestre 2026)."
+  },
+  "refinancement": {
+    "valeur": 0.12,
+    "note": "Part de la dette refinancée chaque année aux conditions du moment (maturité moyenne d'environ huit ans)."
+  },
+  "reactionMarches": {
+    "valeur": 4,
+    "plafond": 80,
+    "note": "Baisse de l'écart de taux, en points de base, par point de PIB d'amélioration du solde, plafonnée à 80 points de base. Mettre une valeur négative pour simuler une défiance liée à la récession."
+  },
+  "dividendes": {
+    "valeur": 5.5,
+    "note": "Rendement en dividendes des participations vendues (Belfius, BNP Paribas, Proximus…), perdu après la vente."
+  },
+  "operationsFinancieres": {
+    "32": {
+      "montant": 15000,
+      "annee": 2029,
+      "reinvesti": 0
+    },
+    "37": {
+      "montant": 10000,
+      "annee": 2028,
+      "reinvesti": 0.5
+    },
+    "87": {
+      "montant": 5000,
+      "annee": 2028,
+      "reinvesti": 0
+    }
+  },
+  "menages": {
+    "note": "Répartition indicative : environ 5 millions de ménages ; parts du revenu disponible par groupe de déciles proches de la structure belge (Gini 0,227). Revenu disponible des ménages d'environ 52 % du PIB.",
+    "partRevenuPib": 0.52,
+    "groupes": {
+      "D13": {
+        "label": "Déciles 1 à 3",
+        "menages": 1.5,
+        "partRevenu": 0.15
+      },
+      "D47": {
+        "label": "Déciles 4 à 7",
+        "menages": 2.0,
+        "partRevenu": 0.36
+      },
+      "D89": {
+        "label": "Déciles 8 et 9",
+        "menages": 1.0,
+        "partRevenu": 0.27
+      },
+      "D10": {
+        "label": "Décile 10",
+        "menages": 0.5,
+        "partRevenu": 0.22
+      }
+    },
+    "autres": {
+      "ENT": "Entreprises (in fine actionnaires, salariés ou clients)",
+      "EXT": "Non-résidents et bénéficiaires à l'étranger",
+      "REG": "Entités fédérées (services régionaux et communautaires)",
+      "FRA": "Fraudeurs (non attribuable)"
+    }
+  },
+  "profils": {
+    "CAP": {
+      "label": "Revenus du capital",
+      "D13": 0.03,
+      "D47": 0.1,
+      "D89": 0.22,
+      "D10": 0.65
+    },
+    "PAT": {
+      "label": "Grands patrimoines",
+      "D89": 0.05,
+      "D10": 0.95
+    },
+    "PV": {
+      "label": "Plus-values",
+      "D47": 0.05,
+      "D89": 0.15,
+      "D10": 0.8
+    },
+    "LOY": {
+      "label": "Propriétaires bailleurs",
+      "D13": 0.03,
+      "D47": 0.17,
+      "D89": 0.3,
+      "D10": 0.5
+    },
+    "AVA": {
+      "label": "Rémunération alternative",
+      "D13": 0.03,
+      "D47": 0.25,
+      "D89": 0.42,
+      "D10": 0.3
+    },
+    "CHQ": {
+      "label": "Chèques-repas",
+      "D13": 0.1,
+      "D47": 0.48,
+      "D89": 0.3,
+      "D10": 0.12
+    },
+    "FLX": {
+      "label": "Flexi-jobs et étudiants",
+      "D13": 0.2,
+      "D47": 0.5,
+      "D89": 0.25,
+      "D10": 0.05
+    },
+    "NICH": {
+      "label": "Niches de l'IPP",
+      "D13": 0.05,
+      "D47": 0.35,
+      "D89": 0.35,
+      "D10": 0.25
+    },
+    "IPPL": {
+      "label": "Tous les contribuables",
+      "D13": 0.15,
+      "D47": 0.45,
+      "D89": 0.27,
+      "D10": 0.13
+    },
+    "TRAV": {
+      "label": "Travailleurs",
+      "D13": 0.2,
+      "D47": 0.5,
+      "D89": 0.25,
+      "D10": 0.05
+    },
+    "CRED": {
+      "label": "Bas revenus du travail",
+      "D13": 0.6,
+      "D47": 0.35,
+      "D89": 0.05
+    },
+    "ENF": {
+      "label": "Familles",
+      "D13": 0.1,
+      "D47": 0.4,
+      "D89": 0.3,
+      "D10": 0.2
+    },
+    "IPPH": {
+      "label": "Hauts revenus",
+      "D89": 0.15,
+      "D10": 0.85
+    },
+    "TVA": {
+      "label": "Consommateurs",
+      "D13": 0.19,
+      "D47": 0.42,
+      "D89": 0.24,
+      "D10": 0.15
+    },
+    "ACC": {
+      "label": "Automobilistes et consommateurs d'énergie",
+      "D13": 0.12,
+      "D47": 0.43,
+      "D89": 0.25,
+      "D10": 0.13,
+      "ENT": 0.07
+    },
+    "ENT": {
+      "label": "Entreprises",
+      "ENT": 1.0
+    },
+    "IND": {
+      "label": "Indépendants",
+      "D47": 0.35,
+      "D89": 0.35,
+      "D10": 0.3
+    },
+    "SAN": {
+      "label": "Patients",
+      "D13": 0.3,
+      "D47": 0.42,
+      "D89": 0.18,
+      "D10": 0.1,
+      "nature": "services"
+    },
+    "INC": {
+      "label": "Malades de longue durée",
+      "D13": 0.45,
+      "D47": 0.45,
+      "D89": 0.1
+    },
+    "PEH": {
+      "label": "Hautes pensions",
+      "D89": 0.45,
+      "D10": 0.55
+    },
+    "ALB": {
+      "label": "Allocataires modestes",
+      "D13": 0.75,
+      "D47": 0.22,
+      "D89": 0.03
+    },
+    "IDX": {
+      "label": "Salariés et allocataires",
+      "D13": 0.21,
+      "D47": 0.43,
+      "D89": 0.24,
+      "D10": 0.12
+    },
+    "FP": {
+      "label": "Agents publics fédéraux",
+      "D13": 0.05,
+      "D47": 0.45,
+      "D89": 0.4,
+      "D10": 0.1
+    },
+    "SP": {
+      "label": "Usagers des services publics",
+      "D13": 0.3,
+      "D47": 0.4,
+      "D89": 0.2,
+      "D10": 0.1,
+      "nature": "services"
+    },
+    "EXT": {
+      "label": "Non-résidents, aide extérieure",
+      "EXT": 1.0
+    },
+    "REG": {
+      "label": "Entités fédérées",
+      "REG": 1.0,
+      "nature": "services"
+    },
+    "FRA": {
+      "label": "Fraude",
+      "FRA": 1.0
+    },
+    "NEU": {
+      "label": "Sans objet"
+    }
+  },
+  "scenarios": {
+    "pmc": {
+      "label": "Paquet maximal cohérent",
+      "court": "Paquet maximal",
+      "description": "Tout ce qui peut coexister : pour chaque assiette, la variante la plus large ; toutes les mesures cumulables, coûts compris ; contradictions tranchées en faveur du camp majoritaire du catalogue (le plus restrictif)."
+    },
+    "med": {
+      "label": "Paquet médian",
+      "court": "Paquet médian",
+      "description": "Même logique, mais pour chaque assiette la variante médiane plutôt que la plus large."
+    },
+    "bfp": {
+      "label": "Seulement les montants du BFP",
+      "court": "BFP seul",
+      "description": "Uniquement les 39 montants du classeur, une variante par assiette (la plus élevée), sans les 224 mesures non chiffrées ni les ajustements du site."
+    },
+    "litteral": {
+      "label": "Lecture littérale",
+      "court": "Littéral",
+      "description": "Toutes les mesures en même temps, variantes et contradictions comprises : une impossibilité, présentée pour mesurer l'ampleur des doublons."
+    }
+  }
+}

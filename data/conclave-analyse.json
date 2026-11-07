@@ -1,0 +1,115 @@
+{
+ "meta": {
+  "source": "Fumée blanche (ouaisfieu/sims), assets/data/corpus.json, champ provenance = analyse",
+  "licence": "CC BY 4.0",
+  "releve": "2026-11-06",
+  "note": "Les 15 montants marqués « analyse » par Fumée blanche, comparés aux estimations du site sur la page Projets liés."
+ },
+ "estimations": [
+  {
+   "ref": "BFP-082",
+   "titre": "Refondre les taux de TVA",
+   "montant": 3000,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/refondre-les-taux-de-tva.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-089",
+   "titre": "Relever le ticket modérateur",
+   "montant": 300,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/relever-le-ticket-moderateur.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-116",
+   "titre": "Raboter le coût de la fonction publique",
+   "montant": 1200,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/raboter-le-cout-de-la-fonction-publique.html",
+   "remarque": "La mesure du classeur demande de raisonner en coût net de la fonction publique : une règle de gestion, pas une économie chiffrable."
+  },
+  {
+   "ref": "BFP-135",
+   "titre": "Réduire les dotations aux Communautés",
+   "montant": 3000,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/reduire-les-dotations-aux-communautes.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-144",
+   "titre": "Saut d'index généralisé",
+   "montant": 2400,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/saut-d-index-generalise.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-152",
+   "titre": "Réorienter l'effort de défense",
+   "montant": 1500,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/reorienter-l-effort-de-defense.html",
+   "remarque": "La mesure demande de cibler la hausse du budget de défense sur les dépenses à effet retour ; le montant suppose plutôt de ralentir la trajectoire."
+  },
+  {
+   "ref": "BFP-204",
+   "titre": "Durcir la taxe Caïman",
+   "montant": 250,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/durcir-la-taxe-caiman.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-207",
+   "titre": "Déplafonner les cotisations patronales",
+   "montant": 400,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/deplafonner-les-cotisations-patronales.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-215",
+   "titre": "Prolonger le centim'index",
+   "montant": 883,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/prolonger-le-centim-index.html",
+   "remarque": "Montant attaché à une mesure qui demande l'abandon du centim'index. La prolongation figure en BFP-263, dans la même famille."
+  },
+  {
+   "ref": "BFP-223",
+   "titre": "Offensive sur l'écart de TVA",
+   "montant": 750,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/offensive-sur-l-ecart-de-tva.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-226",
+   "titre": "Bonus-malus actuariel sur les pensions",
+   "montant": 1500,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/bonus-malus-actuariel-sur-les-pensions.html",
+   "remarque": "Un âge de la pension à la carte « actuariellement neutre » n'a pas, par construction, de rendement budgétaire net à court terme."
+  },
+  {
+   "ref": "BFP-234",
+   "titre": "Rabot de 10 % sur les subsides économiques",
+   "montant": 790,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/rabot-de-10-sur-les-subsides-economiques.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-242",
+   "titre": "Relever la taxe sur les comptes-titres",
+   "montant": 1000,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/relever-la-taxe-sur-les-comptes-titres.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-245",
+   "titre": "Limiter les réductions de cotisations",
+   "montant": 500,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/limiter-les-reductions-de-cotisations.html",
+   "remarque": null
+  },
+  {
+   "ref": "BFP-249",
+   "titre": "Supprimer l'avantage du troisième pilier",
+   "montant": 1000,
+   "url": "https://ouaisfieu.github.io/sims/conclave/mesures/supprimer-l-avantage-du-troisieme-pilier.html",
+   "remarque": null
+  }
+ ]
+}
