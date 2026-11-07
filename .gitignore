@@ -1,0 +1,7 @@
+node_modules/
+_site/
+src/_generated/
+data/export/
+__pycache__/
+*.pyc
+.DS_Store
