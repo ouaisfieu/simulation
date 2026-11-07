@@ -1,0 +1,15 @@
+---
+layout: layouts/base.njk
+nav: dossier
+---
+{%- set n = chapitre - 1 -%}
+{%- set ch = chapitres[n] -%}
+<article class="prose">
+  <p class="surtitre">Dossier · chapitre {{ chapitre }} sur {{ chapitres.length }}</p>
+  <h1>{{ ch.titre }}</h1>
+  {{ content | safe }}
+  <nav class="pagination-ch" aria-label="Chapitres">
+    {% if n > 0 %}<a href="/dossier/{{ chapitres[n - 1].slug }}/"><span>← Chapitre {{ n }}</span>{{ chapitres[n - 1].titre }}</a>{% else %}<a href="/dossier/"><span>← Sommaire</span>Le dossier</a>{% endif %}
+    {% if n < chapitres.length - 1 %}<a href="/dossier/{{ chapitres[n + 1].slug }}/" style="text-align:right"><span>Chapitre {{ n + 2 }} →</span>{{ chapitres[n + 1].titre }}</a>{% else %}<a href="/simulateur/" style="text-align:right"><span>Et maintenant →</span>Le simulateur</a>{% endif %}
+  </nav>
+</article>

@@ -1,0 +1,66 @@
+---
+layout: layouts/base.njk
+nav: familles
+pagination:
+  data: sim.familles
+  size: 1
+  alias: f
+  addAllPagesToCollections: true
+permalink: "/familles/{{ f.slug }}/"
+eleventyComputed:
+  title: "{{ f.code }} · {{ f.label }}"
+  description: "Famille {{ f.code }} : {{ f.label }}. Variantes, chiffrages, choix retenus dans le paquet maximal cohérent et le paquet médian."
+  filDernier: "{{ f.code }}"
+fil: [["Familles", "/familles/"]]
+---
+{%- set L = libelles -%}
+{%- set modes = { exclusif: "Exclusif : une seule variante peut être en vigueur.", cumul: "Cumulatif : les mesures s'additionnent, avec un taux de recouvrement de " + ((f.recouvrement * 100) | num(0)) + " % au-delà de la plus importante.", instruments: "Instruments : moyens d'atteindre l'objectif d'une autre famille, sans rendement propre au scénario central.", neutre: "Neutre : réformes à rendement constant par construction.", processus: "Processus : réformes de procédure ou de long terme, sans effet direct en 2027-2028." } -%}
+<article>
+  <p class="surtitre">{{ f.groupe }}</p>
+  <h1>{{ f.code }} · {{ f.label }}</h1>
+  <p class="chapo">{{ f.membres | length }} mesure{% if f.membres | length > 1 %}s{% endif %}. {{ modes[f.mode] }}</p>
+  {%- if f.note %}<div class="encadre prose"><p>{{ f.note }}</p></div>{% endif %}
+
+  {%- if f.mode == "exclusif" %}
+  <h2>Variante retenue</h2>
+  <dl class="dl-grille prose">
+    {%- for sc, lab in { pmc: "Paquet maximal cohérent", med: "Paquet médian" } %}
+    {%- set ch = f.choixPmc if sc == "pmc" else f.choixMed %}
+    <dt>{{ lab }}</dt><dd>{% if ch == "aucune" or ch === undefined %}Aucune variante{% if f.code == "F07b" %} (contradiction : écartée){% endif %}{% elif ch.length %}Paquet {% for i in ch %}<a href="/mesures/{{ sim.parId[i].slug }}/">{{ sim.parId[i].ref }}</a>{% if not loop.last %} + {% endif %}{% endfor %}{% else %}<a href="/mesures/{{ sim.parId[ch].slug }}/">{{ sim.parId[ch].ref }} · {{ sim.parId[ch].t }}</a>{% endif %}</dd>
+    {%- endfor %}
+  </dl>
+  {%- endif %}
+  {%- set absorptions = [] %}
+  {%- if f.absorbe | length %}
+  <p class="prose">Certaines variantes couvrent d'autres familles : {% for v, cibles in f.absorbe %}<a href="/mesures/{{ sim.parId[v].slug }}/">{{ sim.parId[v].ref }}</a> rend sans objet {% for c in cibles %}<a href="/familles/{{ c | lower }}/">{{ c }}</a>{% if not loop.last %}, {% endif %}{% endfor %}{% if not loop.last %} ; {% endif %}{% endfor %}.</p>
+  {%- endif %}
+
+  {%- if f.pmc %}
+  <div class="tuiles">
+    <div class="tuile"><span class="tuile-label">Dans le paquet maximal, 2027</span><span class="tuile-valeur">{{ f.pmc.brut[2027] | meur }}</span></div>
+    <div class="tuile"><span class="tuile-label">2028</span><span class="tuile-valeur">{{ f.pmc.brut[2028] | meur }}</span></div>
+    <div class="tuile"><span class="tuile-label">2029 (régime)</span><span class="tuile-valeur">{{ f.pmc.brut[2029] | meur }}</span><span class="tuile-detail">avant évitement, indexation et effets macroéconomiques</span></div>
+  </div>
+  {%- endif %}
+
+  {%- set items = [] %}
+  {%- for i in f.membres %}{% set mm = sim.parId[i] %}{% if mm.est.central != 0 %}{% set items = items.concat([{ label: mm.ref + " · " + mm.t, valeur: mm.est.central / 1000, texteValeur: mm.est.central | meur, href: "/mesures/" + mm.slug + "/" }]) %}{% endif %}{% endfor %}
+  {%- if items | length > 1 %}
+  {% barres { titre: "Estimation centrale du site, par mesure", sousTitre: "Rendement annuel en régime (niveau 2029), en milliards d'euros. Les variantes d'une famille exclusive ne s'additionnent pas.", items: items | sortBy("valeur", true), unite: "Md€", colonne: "Mesure", partLabel: 0.55 } %}
+  {%- endif %}
+
+  <h2>Les mesures</h2>
+  <div class="tableau-defilant"><table>
+    <thead><tr><th scope="col">Mesure</th><th scope="col">Type</th><th scope="col">Confiance</th><th scope="col" class="n">BFP</th><th scope="col" class="n">Site (central)</th><th scope="col">Paquet maximal</th></tr></thead>
+    <tbody>
+    {%- for i in f.membres %}{% set mm = sim.parId[i] %}
+      <tr><td><a href="/mesures/{{ mm.slug }}/">{{ mm.ref }}</a> · {{ mm.t }}</td><td>{{ L.types[mm.typ].label }}</td><td><span class="badge g{{ mm.gr if mm.gr != '—' else 'X' }}">{{ mm.gr }}</span></td><td class="n">{{ mm.bfp | meur if mm.bfp !== null else "—" }}</td><td class="n">{{ mm.est.central | meur if mm.typ in ["R", "D", "C", "T"] else "—" }}</td><td>{{ "en vigueur" if mm.statutPmc == "retenue" else mm.statutPmc }}</td></tr>
+    {%- endfor %}
+    </tbody>
+  </table></div>
+
+  {%- set notions = L.notionsParFamille[f.code] or [] %}
+  {%- if notions | length %}
+  <p class="prose">Notions utiles (Sociopo) : {% for n in notions %}{% if sim.liens.sociopo[n] %}<a href="{{ n | sociopo }}">{{ sim.liens.sociopo[n] }}</a>{% if not loop.last %}, {% endif %}{% endif %}{% endfor %}.</p>
+  {%- endif %}
+</article>

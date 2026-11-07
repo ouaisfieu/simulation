@@ -1,0 +1,26 @@
+---
+layout: layouts/base.njk
+nav: dossier
+title: "Le dossier"
+description: "Le dossier central : que donnerait l'adoption, pendant deux ans, des 263 mesures du catalogue budgétaire 2027 du Bureau fédéral du Plan, et est-ce soutenable ?"
+fil: [["Dossier", false]]
+---
+{%- set P = sim.pmc -%}
+<div class="prose">
+  <p class="surtitre">Dossier central</p>
+  <h1>Que donnerait l'adoption des 263 mesures ?</h1>
+  <p class="chapo">Huit chapitres pour passer d'une question simple (« et si l'on faisait tout ? ») à une réponse chiffrée, sourcée et discutable. On peut les lire dans l'ordre ou aller droit au verdict.</p>
+  <ol class="sommaire">
+    {%- for c in chapitres %}<li><a href="/dossier/{{ c.slug }}/"><strong>{{ c.titre }}</strong><span>{{ c.resume }}</span></a></li>{% endfor %}
+  </ol>
+  <h2>Le verdict en bref</h2>
+  <div class="verdict">
+    <div class="verdict-ligne"><strong>Faisable tel quel ?</strong><span><span class="statut non">Non.</span> Il y a {{ sim.stats.contradictions }} contradictions directes et des dizaines de variantes concurrentes. Seul un paquet cohérent de {{ P.actives }} mesures peut s'appliquer.</span></div>
+    <div class="verdict-ligne"><strong>Effet budgétaire</strong><span>{{ P.brut[2028] | num(0) }} Md€ perçus en 2028, {{ P.brut[2029] | num(0) }} Md€ en régime. Le solde passe de {{ P.soldeRef[2028] | num(1) }} % à {{ P.solde[2028] | num(1) }} % du PIB en 2028.</span></div>
+    <div class="verdict-ligne"><strong>Dette</strong><span><span class="statut oui">Soutenable.</span> Elle redescend vers {{ P.dette[2031] | num(0) }} % du PIB en 2031 au lieu de monter à {{ P.detteRef[2031] | num(0) }} %.</span></div>
+    <div class="verdict-ligne"><strong>Économie</strong><span><span class="statut partiel">Coûteux.</span> Le PIB serait {{ (P.ecartPib[2028] | abs) | num(1) }} % sous la référence en 2028 et l'économie compterait environ {{ (P.emploi[2028] | abs) | num(0) }} 000 emplois de moins.</span></div>
+    <div class="verdict-ligne"><strong>Social</strong><span><span class="statut non">Très lourd.</span> Le décile supérieur perdrait environ {{ P.incidence.D10.pctRevenu[2029] | num(0) }} % de son revenu disponible. Les trois premiers déciles perdraient environ {{ P.incidence.D13.pctRevenu[2029] | num(0) }} %, services compris.</span></div>
+    <div class="verdict-ligne"><strong>Droit et institutions</strong><span><span class="statut non">Hors de portée en deux ans</span> pour une part importante : loi spéciale, budgets régionaux, cadastre des patrimoines, décisions européennes.</span></div>
+    <div class="verdict-ligne"><strong>Nécessaire ?</strong><span><span class="statut non">Non.</span> {{ sim.suffisant.rendement.familles | length }} familles sur {{ P.familles | length }} suffiraient, selon le modèle, pour passer sous 3 % de déficit dès 2028.</span></div>
+  </div>
+</div>

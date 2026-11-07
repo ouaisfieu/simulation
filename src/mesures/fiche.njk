@@ -1,0 +1,102 @@
+---
+layout: layouts/base.njk
+nav: mesures
+pagination:
+  data: sim.mesures
+  size: 1
+  alias: m
+  addAllPagesToCollections: true
+permalink: "/mesures/{{ m.slug }}/"
+eleventyComputed:
+  title: "{{ m.ref }} · {{ m.t }}"
+  description: "{{ m.res }}"
+  filDernier: "{{ m.ref }}"
+fil: [["Les 263 mesures", "/mesures/"]]
+---
+{%- set L = libelles -%}
+{%- set f = m.famille -%}
+<article class="prose">
+  <p class="surtitre">{{ m.ref }} · {{ L.categories[m.categorie] or m.categorie }}</p>
+  <h1>{{ m.t }}</h1>
+  {%- set titreFr = m.tf or (m.description if m.langue == "fr" else "") %}
+  {%- if titreFr and titreFr != m.t %}<p class="chapo">« {{ titreFr }} »{% if m.tf %} <span class="petit muet">(traduction du site)</span>{% endif %}</p>{% endif %}
+  <div class="etiquettes">
+    <span class="badge">{{ L.types[m.typ].label }}</span>
+    <span class="badge g{{ m.gr if m.gr != '—' else 'X' }}" title="{{ L.grades[m.gr] }}">Confiance {{ m.gr }}</span>
+    {%- if m.bfp !== null %}<span class="badge gA">Chiffrée par le BFP</span>{% endif %}
+    <a class="badge" href="/familles/{{ f.slug }}/">Famille {{ f.code }}</a>
+    {%- if m.statutPmc == "retenue" %}<span class="badge gB">Dans le paquet maximal</span>{% else %}<span class="badge">Hors paquet : {{ m.statutPmc }}</span>{% endif %}
+    <span class="badge">VO : {{ m.langue | langueNom }}</span>
+  </div>
+  <p>{{ m.res }}</p>
+
+  <h2>Chiffrage</h2>
+  <dl class="dl-grille">
+    <dt>Montant du BFP</dt>
+    <dd>{% if m.bfp !== null %}<strong>{{ m.bfp | meur }}</strong> d'impulsion budgétaire en 2029, avant effets retour{% if m.sourceUrl %} — <a href="{{ m.sourceUrl }}">{{ m.sourceChiffrage | replace(", zie: " + m.sourceUrl, "") | replace(", Zie: " + m.sourceUrl, "") | replace("DC Maatregel", "chiffrage DC2024, mesure") }}</a>{% endif %}{% else %}Aucun : le BFP n'a pas chiffré cette mesure.{% endif %}</dd>
+    <dt>Estimation du site</dt>
+    <dd>{% if m.typ in ["P", "X", "F"] or (m.est.bas == 0 and m.est.haut == 0) %}Sans effet sur le solde{% if m.typ == "F" %} (effet sur la dette seulement){% endif %}.{% else %}<strong>{{ m.est.central | meur }}</strong> par an en régime (fourchette {{ m.est.bas | meur }} à {{ m.est.haut | meur }}){% if m.typ == "T" %} pour le pouvoir fédéral ; l'effet pour l'ensemble des pouvoirs publics dépend de la réaction des entités fédérées{% endif %}{% if m.typ == "N" %} ; neutre au scénario central{% endif %}.{% endif %}</dd>
+    <dt>Confiance</dt><dd><span class="badge g{{ m.gr if m.gr != '—' else 'X' }}">{{ m.gr }}</span> {{ L.grades[m.gr] }}</dd>
+    {%- if m.typ not in ["P", "X", "F", "N"] %}
+    <dt>Montée en charge</dt><dd>{% if m.ph[0] >= 1 %}Plein effet dès 2027.{% elif m.ph[1] >= 1 %}{{ (m.ph[0] * 100) | num(0) }} % du rendement en 2027, plein effet dès 2028.{% else %}{{ (m.ph[0] * 100) | num(0) }} % du rendement en 2027, {{ (m.ph[1] * 100) | num(0) }} % en 2028, plein effet à partir de 2029.{% endif %}</dd>
+    {%- endif %}
+    {%- if m.perception %}
+    <dt>Dans le paquet maximal</dt><dd>{{ m.perception[2027] | meur }} en 2027, {{ m.perception[2028] | meur }} en 2028, {{ m.perception[2029] | meur }} en 2029{% if m.poids < 1 %} (comptée à {{ (m.poids * 100) | num(0) }} % pour tenir compte des recouvrements dans sa famille){% endif %}, avant évitement, indexation et effets macroéconomiques.</dd>
+    {%- endif %}
+  </dl>
+  {%- if m.note %}<div class="encadre note"><span class="encadre-titre">Méthode et réserves</span><p>{{ m.note }}</p></div>{% endif %}
+
+  <h2>Place dans le catalogue</h2>
+  <dl class="dl-grille">
+    <dt>Catégorie du BFP</dt><dd>{{ L.categories[m.categorie] or m.categorie }} <span class="muet petit">({{ m.categorie }})</span></dd>
+    {%- if m.sousCategorie %}<dt>Sous-catégorie</dt><dd>{{ L.sousCategories[m.sousCategorie] or m.sousCategorie }} <span class="muet petit">({{ m.sousCategorie }})</span></dd>{% endif %}
+    <dt>Famille</dt><dd><a href="/familles/{{ f.slug }}/">{{ f.code }} · {{ f.label }}</a> — {{ f.membres | length }} mesure{% if f.membres | length > 1 %}s{% endif %}, {{ L.modesCourts[f.mode] }}</dd>
+    <dt>Paquet maximal</dt><dd>{% if m.statutPmc == "retenue" %}En vigueur{% else %}Non retenue : {{ m.statutPmc }}{% endif %}</dd>
+    <dt>Paquet médian</dt><dd>{% if m.statutMed == "retenue" %}En vigueur{% else %}Non retenue : {{ m.statutMed }}{% endif %}</dd>
+  </dl>
+  {%- set autres = m.autres %}
+  {%- if autres | length %}
+  <details><summary>{% if autres | length > 1 %}Les {{ autres | length }} autres mesures de la famille{% else %}L'autre mesure de la famille{% endif %}</summary>
+    <ul>{% for a in autres %}<li><a href="/mesures/{{ a.slug }}/">{{ a.ref }}</a> · {{ a.t }}{% if a.bfp !== null %} <span class="muet">({{ a.bfp | meur }} selon le BFP)</span>{% endif %}</li>{% endfor %}</ul>
+  </details>
+  {%- endif %}
+  {%- if m.contradictions | length %}
+  <div class="encadre attention"><span class="encadre-titre">Contradiction{% if m.contradictions | length > 1 %}s{% endif %}</span>
+    {%- for c in m.contradictions %}<p><strong>{{ c.sujet }}.</strong> {{ c.texte }} Mesures en jeu : {% for i in c.a.concat(c.b) %}<a href="/mesures/{{ sim.parId[i].slug }}/">{{ sim.parId[i].ref }}</a>{% if not loop.last %}, {% endif %}{% endfor %}.{% if m.id in c.perdants %} Dans le paquet cohérent, cette mesure est <strong>écartée</strong>.{% endif %}</p>{% endfor %}
+  </div>
+  {%- endif %}
+  {%- if m.tensions | length %}
+  <div class="encadre note"><span class="encadre-titre">Tension</span>{% for t in m.tensions %}<p>{{ t.texte }}</p>{% endfor %}</div>
+  {%- endif %}
+
+  <h2>Mise en œuvre</h2>
+  <dl class="dl-grille">
+    <dt>Compétence</dt><dd>{{ L.competences[m.comp] }}</dd>
+    <dt>Véhicule juridique</dt><dd>{{ L.vehicules[m.veh] }}</dd>
+    <dt>Délai réaliste</dt><dd>{{ L.delais[m.dl] }}</dd>
+    <dt>Effet macroéconomique</dt><dd>Classe « {{ L.multiplicateurs[m.mc] }} » (multiplicateur central {{ sim.hyp.multiplicateurs.classes[m.mc].central | num(2) }})</dd>
+    <dt>Qui paie ?</dt><dd>{{ sim.hyp.profils[m.inc].label }}{% if m.typ == "C" %} : ici, les bénéficiaires{% endif %} — <a href="/incidence/">profils d'incidence</a></dd>
+  </dl>
+
+  <h2>Texte du classeur</h2>
+  <p class="petit muet">Version originale ({{ m.langue | langueNom }}), reproduite telle qu'elle figure dans le classeur du BFP.</p>
+  <div class="vo" lang="{{ 'nl' if m.langue == 'nl' else ('en' if m.langue == 'en' else 'fr') }}">
+    <span class="vo-label">Description</span><p>{{ m.description }}</p>
+    {%- if m.modalites %}<span class="vo-label">Modalités techniques</span><p>{{ m.modalites | replace("\n", "<br>") | safe }}</p>{% endif %}
+    {%- if m.motivation %}<span class="vo-label">Motivation</span><p>{{ m.motivation | replace("\n", "<br>") | safe }}</p>{% endif %}
+  </div>
+
+  <h2>Pour aller plus loin</h2>
+  <ul>
+    <li><a href="{{ m.conclave | conclave }}">Fiche {{ m.ref }} dans Fumée blanche</a> (simulateur du conclave budgétaire : lecture critique, faisabilité, réactions des partis)</li>
+    {%- for n in (libelles.notionsParFamille[m.fam] or []) %}{% if sim.liens.sociopo[n] %}<li><a href="{{ n | sociopo }}">{{ sim.liens.sociopo[n] }}</a> (Sociopo)</li>{% endif %}{% endfor %}
+    {%- for s in m.src %}{% set so = sim.sourcesParCle[s] %}{% if so %}<li><a href="{{ so.url }}">{{ so.titre }}</a> — {{ so.auteur }}{% if so.date %}, {{ so.date | dateFr }}{% endif %}</li>{% endif %}{% endfor %}
+  </ul>
+
+  <nav class="pagination-ch" aria-label="Mesure précédente et suivante">
+    {%- set prev = sim.mesures[pagination.pageNumber - 1] if pagination.pageNumber > 0 else null %}
+    {%- set next = sim.mesures[pagination.pageNumber + 1] if pagination.pageNumber < sim.mesures.length - 1 else null %}
+    {% if prev %}<a href="/mesures/{{ prev.slug }}/"><span>← {{ prev.ref }}</span>{{ prev.t }}</a>{% else %}<span></span>{% endif %}
+    {% if next %}<a href="/mesures/{{ next.slug }}/" style="text-align:right"><span>{{ next.ref }} →</span>{{ next.t }}</a>{% endif %}
+  </nav>
+</article>

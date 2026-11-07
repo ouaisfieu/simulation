@@ -1,0 +1,46 @@
+---
+layout: layouts/chapitre.njk
+chapitre: 8
+title: "Ce que la simulation ne dit pas"
+description: "Les hypothèses, simplifications et angles morts de la simulation, et ce qu'il faudrait pour une évaluation complète."
+fil: [["Dossier", "/dossier/"], ["Ce que la simulation ne dit pas", false]]
+permalink: /dossier/limites/
+---
+<p class="chapo">Une simulation n'est jamais plus solide que ses hypothèses. Celle-ci a été conçue pour être transparente plutôt que sophistiquée : chaque paramètre est visible et modifiable. Voici ce qu'elle ne capte pas, ou mal.</p>
+
+<h2>Les chiffres de départ</h2>
+<ul>
+  <li><strong>Les estimations du site.</strong> Plus de trois quarts des mesures n'ont pas de montant officiel. Les estimations du site (confiance C à E) sont des ordres de grandeur. Elles peuvent se tromper d'un facteur deux, dans un sens ou dans l'autre.</li>
+  <li><strong>Les montants du BFP</strong> datent de 2024, ont été calculés sur la législation d'alors et sont des impulsions directes, sans réaction des contribuables. Le site les ajuste pour les mesures déjà adoptées, mais pas pour tous les changements intervenus depuis.</li>
+  <li><strong>La trajectoire de référence</strong> pour 2029 et 2030 est interpolée par le site. Les projections officielles seront révisées : nouveau budget économique, conflit au Moyen-Orient, prix de l'énergie.</li>
+</ul>
+
+<h2>Le modèle macroéconomique</h2>
+<ul>
+  <li><strong>Il est linéaire.</strong> Il additionne des effets proportionnels, sans faillites en chaîne, sans effets de seuil, sans perte ni regain de confiance. Pour un choc de cette taille, c'est une limite sérieuse. Les multiplicateurs observés pendant la crise de l'euro étaient bien plus élevés que prévu (FMI, 2012).</li>
+  <li><strong>Il ne modélise ni la politique monétaire ni le reste de la zone euro.</strong> La BCE fixe ses taux pour toute la zone. Une consolidation belge, même massive, ne la ferait pas bouger. C'est justement pourquoi les multiplicateurs y sont plus élevés que dans un pays doté de sa propre monnaie.</li>
+  <li><strong>Il ne capte pas les effets de long terme.</strong> Moins de dette, c'est une prime de risque plus basse et plus de marge face au vieillissement. Mais certaines mesures découragent l'activité (fiscalité du capital), d'autres l'encouragent (simplification, investissement).</li>
+  <li><strong>Il ne modélise pas les prix.</strong> L'indexation n'intervient qu'à travers un coefficient de fuite pour la TVA ; les effets d'une hausse des accises ou d'un saut d'index sur l'inflation ne sont pas modélisés.</li>
+</ul>
+
+<h2>Les comportements</h2>
+<ul>
+  <li><strong>L'évitement fiscal</strong> est résumé par un taux d'érosion unique pour les impôts sur le capital, majoré quand ils se cumulent. La réalité dépendra de la conception des impôts, des conventions fiscales et de la mobilité des contribuables les plus aisés. Ce sujet est mal documenté en Belgique, faute de cadastre des patrimoines.</li>
+  <li><strong>La réaction des entités fédérées</strong> à un transfert de charges est un simple paramètre. Les Régions pourraient économiser, emprunter davantage ou relever leurs propres impôts.</li>
+  <li><strong>La réaction des marchés</strong> est réduite à un paramètre d'écart de taux. Une consolidation crédible le réduit. Une crise politique l'accroît, comme l'a montré l'automne 2026.</li>
+</ul>
+
+<h2>L'incidence</h2>
+<p>La répartition de la charge par déciles est un exercice comptable : elle attribue chaque mesure à des groupes selon un profil type. Une vraie analyse demanderait un modèle de microsimulation (EXPEDITION au BFP, EUROMOD au niveau européen) appliqué aux mesures précisément calibrées. Le site distingue la perte de revenu de la perte de services, mais ne mesure pas l'effet sur la pauvreté.</p>
+
+<h2>Le droit et la politique</h2>
+<p>Le site signale les obstacles juridiques (compétences, majorités spéciales, Constitution, droit européen) sans prétendre trancher des questions que seuls la Cour constitutionnelle, le Conseil d'État ou la Cour de justice de l'Union peuvent trancher. Il n'attribue aucune position aux partis au-delà de l'origine des mesures chiffrées.</p>
+
+<h2>Ce qu'il faudrait pour aller plus loin</h2>
+<ul>
+  <li><strong>Chiffrer officiellement</strong> au moins les grandes mesures non chiffrées : TVA, indexation, cotisations des indépendants, dotations de la loi de financement.</li>
+  <li><strong>Simuler le paquet dans un modèle macroéconométrique</strong> (HERMES au BFP, le modèle de la BNB), avec les interactions entre mesures.</li>
+  <li><strong>Mesurer l'effet sur la pauvreté et les inégalités</strong> avec un modèle de microsimulation.</li>
+  <li><strong>Évaluer la faisabilité juridique</strong> des mesures les plus lourdes : impôt sur la fortune, réforme des pensions en cours, loi de financement.</li>
+</ul>
+<p>Le BFP le disait lui-même en conclusion : l'exercice demandé en avril 2026 a été mené dans un délai très court, et son utilité pour le processus budgétaire reste à évaluer. Ce site ne fait que pousser la logique du catalogue jusqu'au bout, pour en mesurer les ordres de grandeur.</p>

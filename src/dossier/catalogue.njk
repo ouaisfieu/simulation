@@ -1,0 +1,73 @@
+---
+layout: layouts/chapitre.njk
+chapitre: 2
+title: "Le catalogue : 263 pistes, 39 chiffres"
+description: "Ce que contient le catalogue du Bureau fédéral du Plan : origine des mesures, catégories, chiffrage, mises en garde, mesures déjà adoptées, niveaux de confiance du site."
+fil: [["Dossier", "/dossier/"], ["Le catalogue", false]]
+permalink: /dossier/catalogue/
+---
+{%- set S = sim.stats -%}{%- set B = sim.base.budget2026 -%}
+<p class="chapo">Le classeur publié le 1<sup>er</sup> juin 2026 compte {{ S.total }} mesures. Le BFP n'en chiffre que {{ S.chiffrees }} : toutes reprises du chiffrage des programmes électoraux de 2024, toutes exprimées en impulsion budgétaire brute pour l'année 2029.</p>
+
+<h2>D'où viennent les mesures</h2>
+<p>Le rapport distingue deux origines :</p>
+<ul>
+  <li><strong>Environ 230 propositions d'experts.</strong> Elles viennent d'institutions (BNB, Conseil central de l'économie, KCE, Conseil supérieur des Finances) et d'universitaires. Elles vont de la piste très précise (supprimer le remboursement du comptage des cellules endothéliales avant une opération de la cataracte) à la recommandation de méthode (des revues de dépenses « à la néerlandaise »).</li>
+  <li><strong>Une trentaine de mesures des programmes de 2024.</strong> Ce sont celles que le BFP avait chiffrées à au moins 500 M€ en 2029, qui relèvent du fédéral et qui n'ont pas déjà été adoptées. Elles portent les {{ S.chiffrees }} montants du classeur.</li>
+</ul>
+<p>Le BFP précise que citer un expert ne veut pas dire qu'il soutient l'ensemble des propositions. Les textes sont reproduits tels que les contributeurs les ont rédigés : {{ S.parLangue.fr }} en français, {{ S.parLangue.nl }} en néerlandais, {{ S.parLangue.en }} en anglais et {{ S.parLangue["fr-nl"] }} dans les deux langues nationales. Le site les cite en version originale et en donne une traduction.</p>
+
+<h2>Ce que chiffre le BFP, et comment</h2>
+<p>Les {{ S.chiffrees }} montants sont des <strong>impulsions budgétaires</strong> : l'effet direct sur les recettes ou les dépenses, avant tout effet retour. Ils ne tiennent compte ni de la baisse d'activité qu'entraîne une hausse d'impôt, ni des comportements d'évitement, ni de l'indexation. Ils ont été calculés en 2024 sur la législation de l'époque. Le BFP prévient :</p>
+<ul>
+  <li><strong>Ils ne s'additionnent pas.</strong> Plusieurs mesures portent sur la même assiette.</li>
+  <li><strong>Les effets induits peuvent être énormes.</strong> Une hausse de TVA calibrée pour rapporter 3 Md€ ne rapporte plus qu'environ 800 M€ une fois pris en compte l'indexation des salaires et des allocations et le ralentissement de l'activité (p. 16).</li>
+  <li><strong>Certains chiffrages sont fragiles.</strong> Celui de la lutte contre la fraude est jugé « très hasardeux » (p. 17).</li>
+  <li><strong>Certaines réformes sont hors d'atteinte à court terme.</strong> Une refonte de la loi spéciale de financement « n'est probablement envisageable que dans le cadre d'une réforme de l'État » (p. 8).</li>
+</ul>
+<p>Le rapport donne aussi la taille des postes budgétaires visés. Ce sont les ordres de grandeur dont le site se sert pour estimer les mesures non chiffrées.</p>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Entité I, budget initial 2026</th><th scope="col" class="n">Md€</th><th scope="col">Exemples de mesures du catalogue</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Pensions</th><td class="n">{{ B.pensions | num(1) }}</td><td>gel des hautes pensions, plafond abaissé, capitalisation</td></tr>
+    <tr><th scope="row">Soins de santé</th><td class="n">{{ B.soinsDeSante | num(1) }}</td><td>norme de croissance, ticket modérateur, franchise, médicaments</td></tr>
+    <tr><th scope="row">Maladie-invalidité</th><td class="n">{{ B.maladieInvalidite | num(1) }}</td><td>réintégration, responsabilisation des employeurs</td></tr>
+    <tr><th scope="row">Transferts aux entités fédérées</th><td class="n">{{ B.transfertsEntites | num(1) }}</td><td>réforme de la LSF, dotations découplées de la croissance</td></tr>
+    <tr><th scope="row">Salaires et fonctionnement fédéraux</th><td class="n">{{ (B.salairesFederaux + B.fonctionnement) | num(1) }}</td><td>gel salarial, non-remplacement, norme 10 % + 10 %</td></tr>
+    <tr><th scope="row">Subsides</th><td class="n">{{ B.subsides | num(1) }}</td><td>rabot de 10 %, subsides SNCB, aides à l'emploi</td></tr>
+    <tr><th scope="row">Impôt des personnes physiques</th><td class="n">{{ B.ipp | num(1) }}</td><td>globalisation, niches, quotité exemptée</td></tr>
+    <tr><th scope="row">TVA</th><td class="n">{{ B.tva | num(1) }}</td><td>deux taux, système néerlandais, taux réduits</td></tr>
+    <tr><th scope="row">Cotisations sociales</th><td class="n">{{ B.cotisationsSociales | num(1) }}</td><td>rémunération alternative, plafond, réductions patronales</td></tr>
+    <tr><th scope="row">Impôt des sociétés</th><td class="n">{{ B.isoc | num(1) }}</td><td>RDT, sociétés de management, taxe bancaire</td></tr>
+    <tr><th scope="row">Charges d'intérêts</th><td class="n">{{ B.chargesInterets | num(1) }}</td><td>aucune mesure directe ; elles baissent si la dette baisse</td></tr>
+  </tbody>
+</table></div>
+<p class="note-bas">Source : BFP, rapport 13320, p. 3 à 17. Dépenses totales de l'Entité I : {{ B.depensesEntiteI | num(1) }} Md€ ; recettes : {{ B.recettes | num(1) }} Md€.</p>
+
+<h2>Un catalogue en partie dépassé</h2>
+<p>Les {{ S.chiffrees }} montants datent du printemps 2024. Depuis, la coalition Arizona a adopté une partie de ce qu'ils visaient :</p>
+<ul>
+  <li>une contribution de 10 % sur les plus-values financières, en vigueur depuis le 1<sup>er</sup> janvier 2026 ;</li>
+  <li>le doublement de la taxe sur les comptes-titres et la hausse du précompte VVPR-bis (accord du 24 novembre 2025) ;</li>
+  <li>une politique d'asile plus restrictive et une coupe dans la coopération au développement ;</li>
+  <li>la limitation du chômage dans le temps et la réforme des pensions, votée le 29 mai 2026.</li>
+</ul>
+<p>Le BFP signale lui-même plusieurs de ces recoupements (p. 7, 10, 14-15, 17). Le site en tient compte : un montant du BFP repris tel quel est gradé A, un montant corrigé B.</p>
+
+<h2>Comment le site complète le chiffrage</h2>
+<p>Pour simuler l'ensemble, il faut une estimation pour chaque mesure qui a un effet budgétaire. Le site les grade selon leur solidité :</p>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Confiance</th><th scope="col">Signification</th><th scope="col" class="n">Mesures</th></tr></thead>
+  <tbody>
+    {%- for g in ["A", "B", "C", "D", "E", "—"] %}<tr><th scope="row"><span class="badge g{{ g if g != '—' else 'X' }}">{{ g }}</span></th><td>{{ libelles.grades[g] }}</td><td class="n">{{ S.parGrade[g] }}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+<p>Toutes les mesures n'ont pas un effet budgétaire direct :</p>
+<ul>
+  <li><strong>{{ S.parType.P }} sont des processus</strong> : revues de dépenses, règles budgétaires, réformes institutionnelles.</li>
+  <li><strong>{{ S.parType.N }} sont neutres par construction</strong> : glissements fiscaux, réformes à rendement constant.</li>
+  <li><strong>{{ S.parType.F }} sont des opérations financières</strong> : ventes de participations.</li>
+  <li><strong>{{ S.parType.X }} est hors compétence belge</strong> : le financement monétaire par la BCE.</li>
+</ul>
+<p>Le simulateur permet de filtrer par niveau de confiance. En ne gardant que le grade A, on revient aux seuls montants du BFP.</p>
+<div class="encadre note"><span class="encadre-titre">Comparaison avec Fumée blanche</span><p>Le projet <a href="https://ouaisfieu.github.io/sims/conclave/mesures/">Fumée blanche</a> attribue 15 montants « analyse » à des mesures que le BFP n'a pas chiffrées. Le site les a vérifiés un par un. La plupart sont repris ou encadrés (taxe sur les comptes-titres, rabot sur les subsides, écart de TVA, troisième pilier). Quatre ne le sont pas, parce qu'ils prêtent à la mesure un effet que son texte ne lui donne pas : « Prolonger le centim'index », « Raboter le coût de la fonction publique », « Bonus-malus actuariel » et « Réorienter l'effort de défense ». Détails sur la page <a href="/projets-lies/">Projets liés</a>.</p></div>

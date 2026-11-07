@@ -1,0 +1,19 @@
+---
+layout: layouts/base.njk
+title: "Glossaire"
+description: "Les termes techniques du site, de « absorption » à « trajectoire de référence », avec des renvois vers les notices de l'encyclopédie Sociopo."
+fil: [["Glossaire", false]]
+---
+<div class="prose">
+  <h1>Glossaire</h1>
+  <p class="chapo">Les {{ glossaire.termes | length }} termes techniques employés sur le site. Pour les institutions et les mécanismes belges, les notices de l'encyclopédie <a href="https://ouaisfieu.github.io/sociopo/">Sociopo</a> vont plus loin.</p>
+</div>
+<nav aria-label="Lettres"><ul class="lettres">{% for l in glossaire.lettres %}<li><a href="#lettre-{{ l }}">{{ l }}</a></li>{% endfor %}</ul></nav>
+<dl class="glossaire">
+{%- for t in glossaire.termes %}
+  <dt id="{{ t.id }}">{% if t.premier %}<span id="lettre-{{ t.lettre }}"></span>{% endif %}{{ t.terme }}</dt>
+  <dd>{{ t.def }}
+    {%- if t.voir or t.sociopo %}<span class="petit muet">{% if t.voir %}Voir : <a href="{{ t.voir[0] }}">{{ t.voir[1] }}</a>.{% endif %}{% if t.sociopo %} Sur Sociopo : {% for s in t.sociopo %}<a href="{{ s | sociopo }}">{{ sim.liens.sociopo[s] }}</a>{% if not loop.last %}, {% endif %}{% endfor %}.{% endif %}</span>{% endif %}
+  </dd>
+{%- endfor %}
+</dl>

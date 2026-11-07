@@ -1,0 +1,57 @@
+---
+layout: layouts/chapitre.njk
+chapitre: 7
+title: "Ce qui suffirait"
+description: "Le plus petit sous-ensemble du catalogue qui ramène le déficit sous 3 % du PIB dès 2028, selon deux critères : le rendement le plus élevé ou le choc le plus faible."
+fil: [["Dossier", "/dossier/"], ["Ce qui suffirait", false]]
+permalink: /dossier/suffisant/
+---
+{%- set R1 = sim.suffisant.rendement -%}{%- set R2 = sim.suffisant.recessif -%}{%- set P = sim.pmc -%}
+<p class="chapo">Si le catalogue entier est excessif, quelle part en faudrait-il ? Le site pose une question précise : quel est le plus petit ensemble de familles de mesures qui ramène le déficit public sous 3 % du PIB dès 2028 ? Il y répond avec deux critères.</p>
+
+<h2>Les deux méthodes</h2>
+<p>Dans les deux cas, on part des familles du paquet maximal cohérent qui améliorent le solde. On les ajoute une par une, jusqu'à passer sous 3 % de déficit en 2028. Seul l'ordre change :</p>
+<ul>
+  <li><strong>« Le plus de rendement »</strong> ajoute d'abord les familles qui rapportent le plus. C'est la logique d'un conclave pressé.</li>
+  <li><strong>« Le moins de récession »</strong> ajoute d'abord les familles qui rapportent le plus par point de PIB perdu : celles dont le multiplicateur est le plus faible.</li>
+</ul>
+<p>Les mesures coûteuses du catalogue sont écartées. Toutes les autres hypothèses restent centrales.</p>
+
+<div class="deux-col">
+  <section>
+    <h3>Le plus de rendement : {{ R1.familles | length }} familles</h3>
+    <ol class="petit">{% for f in R1.familles %}<li><a href="/familles/{{ f.code | lower }}/">{{ f.code }}</a> · {{ f.label }} — {{ f.net | meur }} net en 2028</li>{% endfor %}</ol>
+    <dl class="dl-grille petit">
+      <dt>Solde 2028</dt><dd>{{ R1.r.solde[2028] | num(1) }} % du PIB</dd>
+      <dt>PIB 2028 / référence</dt><dd>{{ R1.r.ecartPib[2028] | num(1) }} %</dd>
+      <dt>Emploi 2028</dt><dd>{{ R1.r.emploi[2028] | num(0) }} 000</dd>
+      <dt>Dette 2031</dt><dd>{{ R1.r.dette[2031] | num(0) }} % du PIB</dd>
+    </dl>
+  </section>
+  <section>
+    <h3>Le moins de récession : {{ R2.familles | length }} familles</h3>
+    <ol class="petit">{% for f in R2.familles %}<li><a href="/familles/{{ f.code | lower }}/">{{ f.code }}</a> · {{ f.label }} — {{ f.net | meur }}</li>{% endfor %}</ol>
+    <dl class="dl-grille petit">
+      <dt>Solde 2028</dt><dd>{{ R2.r.solde[2028] | num(1) }} % du PIB</dd>
+      <dt>PIB 2028 / référence</dt><dd>{{ R2.r.ecartPib[2028] | num(1) }} %</dd>
+      <dt>Emploi 2028</dt><dd>{{ R2.r.emploi[2028] | num(0) }} 000</dd>
+      <dt>Dette 2031</dt><dd>{{ R2.r.dette[2031] | num(0) }} % du PIB</dd>
+    </dl>
+  </section>
+</div>
+
+<h2>Ce que cela montre</h2>
+<ul>
+  <li><strong>Le catalogue contient plusieurs chemins vers 3 %.</strong> Il suffit d'une fraction des familles, selon le premier critère, pour passer sous la barre en 2028. Le paquet maximal coûterait {{ (P.ecartPib[2028] | abs) | num(1) }} % de PIB ; ces chemins plus courts coûtent moins.</li>
+  <li><strong>Le chemin le moins récessif est le plus progressif.</strong> Il repose d'abord sur le capital, le patrimoine, les entreprises et la coopération au développement, dont le multiplicateur est faible dans le modèle. Il touche peu les revenus des déciles modestes. Il est aussi plus long, et il dépend d'impôts qui exigent un cadastre et dont l'évitement est très incertain.</li>
+  <li><strong>Le chemin du rendement est le plus « belge ».</strong> Index, TVA, santé, contribution des Régions : on y retrouve les dossiers sur lesquels la majorité Arizona achoppe depuis l'été 2026.</li>
+</ul>
+<div class="encadre note"><span class="encadre-titre">Lecture prudente</span><p>Ces classements dépendent des hypothèses du modèle, en particulier des multiplicateurs, faibles pour la fiscalité du capital et élevés pour les dépenses. Ce sont des hypothèses courantes dans la littérature, mais discutées. Un autre jeu d'hypothèses change l'ordre. Le <a href="/simulateur/">simulateur</a> permet de composer son propre paquet et d'en mesurer les effets.</p></div>
+
+<h2>Les repères du débat</h2>
+<p>Trois ordres de grandeur circulent en 2026. Tous sont nettement inférieurs au paquet maximal cohérent ({{ P.brut[2029] | num(0) }} Md€) :</p>
+<ul>
+  <li><strong>7,7 Md€ d'ici 2029</strong> : l'effort minimal calculé par le Comité de monitoring en juillet 2026 pour l'Entité I. Il précise qu'il faudrait environ le double pour revenir à 3 %.</li>
+  <li><strong>10 Md€ d'ici 2029</strong> : l'objectif que s'est fixé la majorité Arizona, sans le traduire en mesures à la date du 6 novembre 2026.</li>
+  <li><strong>Environ 11 Md€, 14 Md€ avec les baisses de charges prévues</strong> : selon le gouverneur de la BNB, ce qu'il faudrait pour ramener le déficit à 4 % du PIB d'ici la fin de la législature.</li>
+</ul>

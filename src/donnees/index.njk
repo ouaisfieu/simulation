@@ -1,0 +1,49 @@
+---
+layout: layouts/base.njk
+nav: donnees
+title: "Données ouvertes"
+description: "Téléchargez les 263 mesures du catalogue budgétaire 2027, la grille éditoriale, les hypothèses et les résultats de la simulation, en JSON et en CSV."
+fil: [["Données", false]]
+---
+<div class="prose">
+  <h1>Données ouvertes</h1>
+  <p class="chapo">Toutes les données du site sont téléchargeables. Elles permettent de refaire les calculs, de les contester ou de les réutiliser.</p>
+
+  <h2>Les mesures</h2>
+</div>
+<ul class="fichiers">
+  <li><a href="/donnees/fichiers/export/mesures.csv" download>mesures.csv</a><code>CSV · UTF-8</code><span>Les 263 mesures en un seul tableau : texte original, catégorie, montant du BFP, titre et résumé en français, famille, type, estimations basse, centrale et haute, montée en charge, niveau de confiance, compétence, véhicule juridique, délai, liens vers les fiches. S'ouvre dans un tableur.</span></li>
+  <li><a href="/donnees/fichiers/export/mesures.json" download>mesures.json</a><code>JSON</code><span>Le même contenu, en JSON.</span></li>
+  <li><a href="/donnees/fichiers/mesures-bfp.json" download>mesures-bfp.json</a><code>JSON</code><span>L'extraction brute du classeur du BFP, sans aucun ajout du site, avec l'empreinte SHA-256 du fichier source.</span></li>
+  <li><a href="/donnees/fichiers/editorial.json" download>editorial.json</a><code>JSON</code><span>La grille éditoriale du site : qualification des mesures, {{ sim.stats.familles }} familles, {{ sim.stats.contradictions }} contradictions et {{ sim.tensions | length }} tensions.</span></li>
+</ul>
+<div class="prose"><h2>Le modèle</h2></div>
+<ul class="fichiers">
+  <li><a href="/donnees/fichiers/base.json" download>base.json</a><code>JSON</code><span>La trajectoire de référence 2025-2031, le budget 2026 de l'Entité I et le cadre européen.</span></li>
+  <li><a href="/donnees/fichiers/hypotheses.json" download>hypotheses.json</a><code>JSON</code><span>Les hypothèses du modèle : multiplicateurs, fuites, érosion, marchés, profils d'incidence, scénarios.</span></li>
+  <li><a href="/assets/data/simulation.json" download>simulation.json</a><code>JSON</code><span>Le paquet compact chargé par le simulateur.</span></li>
+  <li><a href="/assets/js/moteur.js">moteur.js</a><code>JavaScript</code><span>Le moteur de simulation, un module ES sans dépendance. Il s'utilise aussi bien dans Node que dans un navigateur.</span></li>
+</ul>
+<div class="prose"><h2>Les références</h2></div>
+<ul class="fichiers">
+  <li><a href="/donnees/fichiers/sources.json" download>sources.json</a><code>JSON</code><span>Les {{ sim.sources | length }} sources, avec leur usage.</span></li>
+  <li><a href="/donnees/fichiers/liens.json" download>liens.json</a><code>JSON</code><span>Les correspondances avec les fiches de Fumée blanche et les notices de Sociopo.</span></li>
+  <li><a href="/donnees/fichiers/conclave-analyse.json" download>conclave-analyse.json</a><code>JSON</code><span>Les 15 estimations « analyse » de Fumée blanche, comparées sur la page <a href="/projets-lies/">Projets liés</a>.</span></li>
+</ul>
+<div class="prose">
+  <h2>Refaire les calculs</h2>
+  <p>Le moteur s'importe directement :</p>
+  <pre><code>import { preparer, parametres, simuler } from "./moteur.js";
+const d = preparer(mesuresBfp, editorial, base, hypotheses);
+const r = simuler(d, parametres("pmc", { macro: "severe" }));
+console.log(r.solde[2028], r.dette[2031]);</code></pre>
+  <p>Le dépôt du site contient aussi les scripts d'extraction du classeur et de construction de la grille éditoriale, ainsi qu'un script de test.</p>
+
+  <h2>Licences</h2>
+  <ul>
+    <li><strong>Textes, traductions, estimations et données propres au site</strong> : <a href="https://creativecommons.org/licenses/by/4.0/deed.fr">CC BY 4.0</a>. Citez « Et si la Belgique adoptait les 263 mesures ? » avec un lien vers le site.</li>
+    <li><strong>Code</strong> (moteur, graphiques, gabarits, scripts) : licence MIT.</li>
+    <li><strong>Textes et montants du classeur du BFP</strong> : ils restent la propriété du Bureau fédéral du Plan. Citez-le comme source : <em>Bureau fédéral du Plan, « Options de politiques pour l'élaboration du budget 2027 », 2026</em>.</li>
+  </ul>
+  <p class="note-bas">Empreinte SHA-256 du classeur utilisé : <code class="petit">{{ sim.metaBfp.sha256 }}</code></p>
+</div>

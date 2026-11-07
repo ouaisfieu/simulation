@@ -1,0 +1,61 @@
+---
+layout: layouts/base.njk
+nav: precedent
+title: "Le précédent de 1993-2000"
+description: "Comment la Belgique a assaini ses finances publiques dans les années 1990 (plan global, indice santé, norme salariale), et ce que ce précédent dit du paquet de 2027-2028."
+fil: [["Le précédent de 1993-2000", false]]
+---
+{%- set P = sim.pmc -%}{%- set T = sim.faisabilite.type -%}
+{%- set posT = (T.R[2028] if T.R else 0) + (T.D[2028] if T.D else 0) + (T.T[2028] if T.T else 0) -%}
+<div class="prose">
+  <h1>Le précédent de 1993-2000</h1>
+  <p class="chapo">La Belgique a déjà réussi un assainissement massif. Entre 1993 et 1998, son solde structurel s'est amélioré de 9 points de PIB pour se qualifier à l'euro. La dette, qui avait culminé à plus de 130 % du PIB, a commencé une longue décrue. Que dit ce précédent du paquet de 2027-2028 ?</p>
+  <p class="note-bas">Source principale : P. Bisciari et al., « Analyse de la politique d'assainissement des finances publiques belges », Revue économique de la BNB, juin 2015, p. 77-97.</p>
+
+  <h2>Le point de départ</h2>
+  <p>En 1992, le déficit public atteint 9,1 % du PIB et la dette 130,8 %. Les taux à long terme sont à 8,7 %, l'inflation à 2,4 %. La Belgique sort d'un premier assainissement (1982-1987). Celui-ci avait amélioré le solde structurel de 5,4 points, surtout en comprimant les dépenses primaires de plus de 7 points de PIB, investissement public compris. Le traité de Maastricht fixe le cap : un déficit sous 3 % pour entrer dans l'Union monétaire.</p>
+
+  <h2>Les instruments</h2>
+  <ul>
+    <li><strong>Trois normes budgétaires dès 1992.</strong> Les recettes fiscales évoluent comme le PNB, les dépenses primaires fédérales ne dépassent pas l'inflation et la sécurité sociale doit être à l'équilibre chaque année. En 1994, le gouvernement annonce viser un excédent primaire de plus de 6 % du PIB.</li>
+    <li><strong>Le <a href="https://ouaisfieu.github.io/sociopo/notions/plan-global/">plan global</a> de novembre 1993.</strong> Il impose un gel des salaires réels en 1995-1996. Il crée aussi l'<a href="https://ouaisfieu.github.io/sociopo/notions/indice-sante/">indice santé</a>, qui exclut tabac, alcool, essence et diesel du calcul de l'indexation. C'est le cousin historique des freins à l'indexation du catalogue de 2026. Le front commun syndical lui oppose une grève générale le 26 novembre 1993.</li>
+    <li><strong>La <a href="https://ouaisfieu.github.io/sociopo/notions/loi-de-1996/">loi de 1996</a> sur la compétitivité.</strong> Elle instaure la <a href="https://ouaisfieu.github.io/sociopo/notions/norme-salariale/">norme salariale</a>, qui aligne l'évolution des salaires sur celle de l'Allemagne, de la France et des Pays-Bas. Une proposition du catalogue (<a href="/mesures/bfp-071/">BFP-071</a>) demande aujourd'hui sa suppression, en même temps que celle de l'indexation automatique des salaires.</li>
+    <li><strong>Des recettes nouvelles :</strong>
+      <ul>
+        <li>la TVA passe de 19,5 % à 20,5 % en 1994, puis à 21 % en 1996 ;</li>
+        <li>le précompte sur les titres à revenu fixe passe de 10 à 15 % ;</li>
+        <li>la taxe sur les opérations de bourse est relevée ;</li>
+        <li>une contribution complémentaire de crise et une cotisation spéciale de sécurité sociale (1994) sont créées.</li>
+      </ul>
+      Au total, les recettes augmentent de 5 points de PIB entre 1992 et 1998, dont 1,8 point pour l'impôt des sociétés.</li>
+    <li><strong>Des dépenses tenues.</strong> Les dépenses primaires restent quasi stables en % du PIB. La norme de croissance réelle de 1,5 % pour les soins de santé (1995-1999) est « rarement respectée ». Les subventions aux entreprises publiques et les crédits de défense sont gelés en valeur nominale.</li>
+    <li><strong>Des opérations ponctuelles.</strong> Les privatisations rapportent 2,6 % du PIB. La vente d'or de la Banque nationale rapporte environ 2,5 points de PIB en 1996 et 1 point en 1998, deux recettes affectées à la réduction de la dette.</li>
+  </ul>
+
+  <h2>Les conditions du succès</h2>
+  <p>La BNB insiste sur un point : l'effort a porté sur les recettes et sur la <strong>baisse des charges d'intérêts</strong> (−3,5 points de PIB entre 1992 et 1998), pendant que les dépenses primaires restaient stables. La convergence vers l'euro a fait fondre l'écart de taux avec l'Allemagne. La croissance potentielle était de 2,1 % par an. Une conjoncture favorable a permis l'équilibre budgétaire au tournant du millénaire. La dette est passée de 130,8 % du PIB en 1992 à 118,6 % en 1998, puis a poursuivi sa baisse.</p>
+
+  <h2>1993-1998 et 2027-2028 : la comparaison</h2>
+</div>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col"></th><th scope="col">1993-1998 (observé)</th><th scope="col">Paquet maximal, 2027-2028 (simulé)</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Ampleur</th><td>Solde structurel amélioré de 9 points de PIB en six ans, dont 3,5 points grâce à la baisse des intérêts</td><td>{{ (P.brut[2028] / sim.refPib[2028] * 100) | num(1) }} points de PIB de mesures brutes en deux ans ({{ (P.brut[2029] / sim.refPib[2029] * 100) | num(1) }} en régime) ; solde amélioré de {{ (P.solde[2028] - P.soldeRef[2028]) | num(1) }} points en 2028</td></tr>
+    <tr><th scope="row">Recettes ou dépenses</th><td>Surtout recettes et baisse des intérêts ; dépenses primaires stables</td><td>Environ {{ ((T.R[2028] if T.R else 0) / posT * 100) | num(0) }} % de recettes, {{ ((T.D[2028] if T.D else 0) / posT * 100) | num(0) }} % d'économies et {{ ((T.T[2028] if T.T else 0) / posT * 100) | num(0) }} % de transferts vers les entités fédérées ; les mesures coûteuses en reprennent {{ (((T.C[2028] if T.C else 0) | abs) / posT * 100) | num(0) }} % (en 2028)</td></tr>
+    <tr><th scope="row">Taux longs</th><td>8,7 % en 1992, en forte baisse grâce à la convergence</td><td>Entre 3,5 et 4,3 % en 2026, aucune convergence à attendre</td></tr>
+    <tr><th scope="row">Croissance de fond</th><td>Croissance potentielle de 2,1 % par an</td><td>Environ 1 à 1,4 % par an dans la trajectoire de référence</td></tr>
+    <tr><th scope="row">Indexation</th><td>Indice santé, gel des salaires réels, norme salariale</td><td>Saut d'index, indexation annuelle, centim'index, fin de l'indexation automatique des salaires</td></tr>
+    <tr><th scope="row">Dette</th><td>130,8 % (1992) → 118,6 % (1998)</td><td>{{ sim.pmc.dette[2026] | num(1) }} % (2026) → {{ P.dette[2028] | num(1) }} % (2028) → {{ P.dette[2031] | num(1) }} % (2031)</td></tr>
+    <tr><th scope="row">Horizon</th><td>Un objectif clair et partagé : l'euro</td><td>Aucun objectif commun ; règles européennes déjà respectées avec beaucoup moins</td></tr>
+  </tbody>
+</table></div>
+<div class="prose">
+  <h2>Ce que le précédent enseigne</h2>
+  <ul>
+    <li><strong>C'est possible.</strong> Un pays fédéral, très endetté et politiquement fragmenté a déjà dégagé durablement de gros excédents primaires.</li>
+    <li><strong>Il y fallait un horizon commun.</strong> L'entrée dans l'euro a soudé une majorité pendant plusieurs législatures. Le catalogue de 2026 n'a pas d'équivalent.</li>
+    <li><strong>Les intérêts avaient fait une bonne part du travail.</strong> En 2027-2028, ils jouent en sens inverse : la dette se refinance plus cher, d'où la hausse prévue de la charge d'intérêts.</li>
+    <li><strong>Le rythme était deux à trois fois plus lent.</strong> Le paquet maximal concentre en deux ans un effort comparable à celui de six années dans les années 1990, avec une croissance potentielle deux fois plus faible.</li>
+  </ul>
+  <p class="note-bas">Pour aller plus loin : le dossier <a href="https://ouaisfieu.github.io/sociopo/dossiers/dette-et-austerite/">Dette et austérité</a> de Sociopo, et la <a href="{{ sim.sourcesParCle['nbb-2015-assainissement'].url }}">Revue économique de la BNB de juin 2015</a>.</p>
+</div>

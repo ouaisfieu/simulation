@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if title %}{{ title }} · {% endif %}Et si la Belgique adoptait les 263 mesures ?</title>
+<meta name="description" content="{{ description or 'Encyclopédie et simulateur : que se passerait-il si la Belgique adoptait pendant deux ans les 263 mesures du catalogue budgétaire 2027 du Bureau fédéral du Plan ? Chiffrage, contradictions, macroéconomie, dette, incidence sociale, soutenabilité.' }}">
+<link rel="canonical" href="https://ouaisfieu.github.io{{ page.url | url }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ouaisfieu.github.io{{ page.url | url }}">
+<meta property="og:site_name" content="Et si la Belgique adoptait les 263 mesures ?">
+<meta property="og:title" content="{{ title or 'Et si la Belgique adoptait les 263 mesures ?' }}">
+<meta property="og:description" content="{{ description or 'Le catalogue budgétaire 2027 du Bureau fédéral du Plan, mesure par mesure, et ce que donnerait son adoption intégrale.' }}">
+<meta property="og:locale" content="fr_BE">
+<meta name="theme-color" content="#fbfaf6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131417" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/source-serif-4-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/assets/img/icone.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("simulation-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+{% if nonIndexe %}<meta name="robots" content="noindex">{% endif %}
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+{% if head %}{{ head | safe }}{% endif %}
+{% if jsonld %}<script type="application/ld+json">{{ jsonld | json | safe }}</script>{% endif %}
+</head>
+<body>
+<a class="saut" href="#contenu">Aller au contenu</a>
+<div class="bandeau" role="note"><div class="conteneur">Situation au {{ maj | dateFr }} : pas de budget fédéral 2027, démission du Premier ministre refusée par le Roi le 6 novembre, nouveau rapport le 16. <a href="/contexte/">Le contexte</a></div></div>
+<header class="entete">
+  <div class="conteneur">
+    <div class="entete-haut">
+      <a class="marque" href="/"><strong>Et si… les 263 mesures</strong><span>Simulation du catalogue budgétaire 2027 du Bureau fédéral du Plan</span></a>
+      <div class="outils">
+        <a class="bouton-icone" href="/recherche/" aria-label="Rechercher"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a>
+        <button class="bouton-icone" id="bascule-theme" type="button" aria-label="Changer de thème (clair ou sombre)"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Navigation principale">
+      <ul>
+        {%- set liens = [["/", "Accueil", "accueil"], ["/dossier/", "Dossier", "dossier"], ["/simulateur/", "Simulateur", "simulateur"], ["/mesures/", "Les 263 mesures", "mesures"], ["/familles/", "Familles", "familles"], ["/contradictions/", "Contradictions", "contradictions"], ["/incidence/", "Qui paie ?", "incidence"], ["/precedent-1993-2000/", "1993-2000", "precedent"], ["/comparaisons/", "Comparaisons UE", "comparaisons"], ["/contexte/", "Contexte", "contexte"], ["/methode/", "Méthode", "methode"], ["/sources/", "Sources", "sources"], ["/donnees/", "Données", "donnees"], ["/projets-lies/", "Projets liés", "projets"]] %}
+        {%- for l in liens %}<li><a href="{{ l[0] }}"{% if nav == l[2] %} aria-current="page"{% endif %}>{{ l[1] }}</a></li>{% endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>
+<main id="contenu" class="conteneur"{% if not nonIndexe %} data-pagefind-body{% endif %}>
+{%- if fil %}
+<nav class="fil" aria-label="Fil d'Ariane" data-pagefind-ignore><ol><li><a href="/">Accueil</a></li>{% for f in fil %}<li>{% if f[1] %}<a href="{{ f[1] }}">{{ f[0] }}</a>{% else %}<span aria-current="page">{{ f[0] }}</span>{% endif %}</li>{% endfor %}{% if filDernier %}<li><span aria-current="page">{{ filDernier }}</span></li>{% endif %}</ol></nav>
+{%- endif %}
+{{ content | safe }}
+</main>
+<footer class="pied" data-pagefind-ignore>
+  <div class="conteneur pied-grille">
+    <section>
+      <h2>Le site</h2>
+      <p>Encyclopédie citoyenne et indépendante. Elle n'émane ni du Bureau fédéral du Plan ni d'aucune institution. Les estimations, traductions et lectures sont celles du site ; les sources sont citées à chaque chiffre.</p>
+      <p>Mise à jour : {{ maj | dateFr }}. Textes et données CC BY 4.0, code MIT.</p>
+    </section>
+    <section>
+      <h2>Comprendre</h2>
+      <ul><li><a href="/dossier/">Le dossier central</a></li><li><a href="/methode/">La méthode</a></li><li><a href="/glossaire/">Le glossaire</a></li><li><a href="/sources/">Les sources</a></li><li><a href="/donnees/">Les données ouvertes</a></li></ul>
+    </section>
+    <section>
+      <h2>Projets liés</h2>
+      <ul><li><a href="https://ouaisfieu.github.io/sims/conclave/mesures/">Fumée blanche : les 263 mesures</a></li><li><a href="https://ouaisfieu.github.io/sociopo/">Sociopo : la sociopolitique belge</a></li><li><a href="https://ouaisfieu.github.io/appel-de-novembre/">Appel de novembre</a></li><li><a href="/projets-lies/">Présentation et vérification</a></li></ul>
+    </section>
+  </div>
+</footer>
+<script type="module" src="/assets/js/site.js"></script>
+{% if scripts %}{% for s in scripts %}<script type="module" src="{{ s }}"></script>{% endfor %}{% endif %}
+</body>
+</html>

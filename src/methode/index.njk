@@ -1,0 +1,112 @@
+---
+layout: layouts/base.njk
+nav: methode
+title: "Méthode"
+description: "Comment le site passe du classeur du Bureau fédéral du Plan à une simulation : grille éditoriale, sélection des mesures, effets d'évitement, modèle macroéconomique, finances publiques et incidence."
+fil: [["Méthode", false]]
+---
+{%- set H = sim.hyp -%}
+<div class="prose">
+  <h1>Méthode</h1>
+  <p class="chapo">Tout ce que le site affiche sort d'un même moteur de calcul, écrit en JavaScript sans dépendance. Il tourne à l'identique au moment de la construction des pages et dans votre navigateur. Cette page décrit chaque étape et chaque hypothèse. Toutes sont modifiables dans le <a href="/simulateur/">simulateur</a>.</p>
+
+  <nav class="encadre" aria-label="Sur cette page"><span class="encadre-titre">Sur cette page</span>
+    <ol class="petit">
+      <li><a href="#donnees">Les données de départ</a></li>
+      <li><a href="#grille">La grille éditoriale</a></li>
+      <li><a href="#selection">Choisir ce qui coexiste</a></li>
+      <li><a href="#brut-net">Du brut au net</a></li>
+      <li><a href="#macro">L'effet sur l'activité</a></li>
+      <li><a href="#finances">Le solde et la dette</a></li>
+      <li><a href="#incidence">L'incidence</a></li>
+      <li><a href="#controle">Les contrôles</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="donnees">1. Les données de départ</h2>
+  <p>Le point de départ est le classeur publié avec le rapport du Bureau fédéral du Plan (BFP) « Options de politiques pour l'élaboration du budget 2027 ». Il contient {{ sim.stats.total }} mesures. {{ sim.stats.chiffrees }} portent un montant : l'impulsion budgétaire en 2029, en millions d'euros. Ces montants viennent du chiffrage des programmes électoraux de 2024 (DC2024). Ce sont des effets directs, calculés sans réaction des contribuables ni effets macroéconomiques.</p>
+  <p>Le site a extrait le classeur ligne par ligne, sans retouche : texte original, catégorie, modalités, motivation, montant et source. Les textes sont en néerlandais pour {{ sim.stats.parLangue.nl }} mesures, en français pour {{ sim.stats.parLangue.fr }}, en anglais pour {{ sim.stats.parLangue.en }} et dans les deux langues nationales pour {{ sim.stats.parLangue["fr-nl"] }}. Ils sont cités en version originale sur chaque fiche, avec une traduction du site. L'empreinte SHA-256 du fichier source figure dans les <a href="/donnees/">données ouvertes</a>.</p>
+  <p>La trajectoire de référence, à politique inchangée, reprend les projections de la BNB et du BFP de juin 2026. Elle est détaillée sur la page <a href="/contexte/">Contexte</a>.</p>
+
+  <h2 id="grille">2. La grille éditoriale</h2>
+  <p>Chaque mesure a reçu, à la lecture de son texte, une qualification :</p>
+  <ul>
+    <li><strong>un type</strong> : {% for k, t in libelles.types %}{{ t.label | lower }} ({{ sim.stats.parType[k] }}){% if not loop.last %}, {% endif %}{% endfor %} ;</li>
+    <li><strong>une famille</strong> : les {{ sim.stats.familles }} familles regroupent les mesures qui portent sur la même assiette ou le même mécanisme ;</li>
+    <li><strong>une estimation basse, centrale et haute</strong> du rendement en 2029, en millions d'euros ;</li>
+    <li><strong>une montée en charge</strong> : la part du rendement perçue en 2027 et en 2028 ;</li>
+    <li><strong>un niveau de confiance</strong>, de A à E ;</li>
+    <li><strong>une classe macroéconomique et un profil d'incidence</strong> (voir plus bas) ;</li>
+    <li><strong>la compétence, le véhicule juridique et le délai de mise en œuvre.</strong></li>
+  </ul>
+</div>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Niveau</th><th scope="col">Signification</th><th scope="col" class="n">Mesures</th></tr></thead>
+  <tbody>
+  {%- for g, label in libelles.grades %}
+    <tr><td>{% if g != "—" %}<span class="badge g{{ g }}">{{ g }}</span>{% else %}—{% endif %}</td><td>{{ label }}</td><td class="n">{{ sim.stats.parGrade[g] }}</td></tr>
+  {%- endfor %}
+  </tbody>
+</table></div>
+<div class="prose">
+  <p>Les estimations du site partent de grandeurs publiques : taille des postes budgétaires dans le rapport du BFP, assiettes fiscales, chiffrages officiels d'autres organismes. Chaque fiche indique sa justification. Le filtre « BFP seul » du simulateur les écarte toutes.</p>
+
+  <h2 id="selection">3. Choisir ce qui coexiste</h2>
+  <p>On ne peut pas adopter à la fois trois impôts sur la fortune différents, ou indexer et ne pas indexer. Le site applique donc des règles explicites, décrites au <a href="/dossier/contradictions/">chapitre 3 du dossier</a> :</p>
+  <ul>
+    <li><strong>Familles exclusives</strong> : une seule variante est retenue. Dans le paquet maximal cohérent, c'est la plus large ; dans le paquet médian, la variante médiane.</li>
+    <li><strong>Familles cumulatives</strong> : les mesures s'additionnent, mais un taux de recouvrement retire les doubles comptes quand elles touchent en partie la même assiette.</li>
+    <li><strong>Absorption</strong> : une mesure-cadre peut englober d'autres familles. La globalisation de tous les revenus, par exemple, absorbe les mesures plus étroites sur le précompte mobilier.</li>
+    <li><strong>Contradictions</strong> : quand deux camps s'opposent, le paquet cohérent suit le camp majoritaire du catalogue, qui est aussi le plus restrictif. Les mesures écartées sont listées sur la <a href="/contradictions/">carte des contradictions</a>.</li>
+    <li><strong>Coûts</strong> : les mesures qui coûtent (crédits d'impôt, allègements, investissements) font partie du catalogue et sont comptées.</li>
+  </ul>
+
+  <h2 id="brut-net">4. Du brut au net</h2>
+  <p>Pour chaque mesure retenue et chaque année, le rendement brut est le montant de 2029 multiplié par sa montée en charge. Il est ensuite ajusté au PIB nominal de l'année. Trois corrections le transforment en rendement net :</p>
+  <ul>
+    <li><strong>La fuite par l'indexation.</strong> Une hausse de TVA relève l'indice santé, donc les salaires et les allocations indexés. Le site retire {{ (H.fuiteIndexation.central * 100) | num(0) }} % du rendement des mesures de TVA (entre {{ (H.fuiteIndexation.doux * 100) | num(0) }} et {{ (H.fuiteIndexation.severe * 100) | num(0) }} % selon le scénario). Ce coefficient est calé sur l'exemple du rapport du BFP : une hausse de TVA de 3 Md€ ne rapporte plus que 0,8 Md€ une fois l'indexation et les effets sur l'activité pris en compte. Avec les multiplicateurs centraux, le site obtient environ 0,9 Md€.</li>
+    <li><strong>L'érosion des impôts sur le capital.</strong> Évitement, déplacement des avoirs, réorganisation des portefeuilles : {{ (H.erosionCapital.central * 100) | num(0) }} % du rendement est perdu en hypothèse centrale. Ce taux augmente de {{ (H.erosionCapital.cumul * 100) | num(0) }} points pour chaque famille d'impôt sur le capital supplémentaire, avec un plafond de {{ (H.erosionCapital.plafond * 100) | num(0) }} %.</li>
+    <li><strong>La répercussion régionale.</strong> Quand le fédéral transfère une charge aux entités fédérées, seule une part ({{ (H.repercussionRegions.valeur * 100) | num(0) }} %) se traduit par des économies régionales. Le reste devient du déficit régional, qui compte aussi dans le solde de l'ensemble des administrations publiques.</li>
+  </ul>
+  <p>Les ventes de participations publiques sont traitées à part. Elles réduisent la dette l'année de la vente, mais privent l'État de dividendes ({{ H.dividendes.valeur | num(1) }} % par an). Une proposition prévoit d'en réinvestir la moitié.</p>
+
+  <h2 id="macro">5. L'effet sur l'activité</h2>
+  <p>Chaque mesure appartient à une classe macroéconomique, dotée d'un multiplicateur budgétaire. C'est l'effet sur le niveau du PIB, la première année, d'une impulsion de 1 % du PIB. L'effet persiste ensuite partiellement : {% for w in H.multiplicateurs.persistance %}{{ (w * 100) | num(0) }} %{% if not loop.last %}, {% endif %}{% endfor %} de l'effet initial les années suivantes. La Belgique ne dispose pas de sa propre politique monétaire pour amortir le choc.</p>
+</div>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Classe</th><th scope="col" class="n">Doux</th><th scope="col" class="n">Central</th><th scope="col" class="n">Sévère</th></tr></thead>
+  <tbody>
+  {%- for k, c in H.multiplicateurs.classes %}{% if k != "nul" %}
+    <tr><th scope="row">{{ c.label }}</th><td class="n">{{ c.doux | num(2) }}</td><td class="n">{{ c.central | num(2) }}</td><td class="n">{{ c.severe | num(2) }}</td></tr>
+  {%- endif %}{% endfor %}
+  </tbody>
+</table></div>
+<div class="prose">
+  <p>Ces valeurs sont des ordres de grandeur compatibles avec la littérature : FMI (2012), Blanchard et Leigh (2013), BNB (2014). Le jeu sévère se rapproche des multiplicateurs observés pendant la crise de la zone euro (voir les <a href="/comparaisons/">comparaisons européennes</a>). L'emploi suit le PIB avec une élasticité de {{ H.okun.valeur | num(1) }} (loi d'Okun).</p>
+
+  <h2 id="finances">6. Le solde et la dette</h2>
+  <p>Pour chaque année, le solde simulé part du solde de référence. On y ajoute :</p>
+  <ul>
+    <li>le rendement net des mesures ;</li>
+    <li>l'effet des <strong>stabilisateurs automatiques</strong> : chaque point de PIB perdu dégrade le solde de {{ H.semiElasticite.valeur | num(2) }} point (semi-élasticité estimée pour la Belgique par Mourre et Poissonnier, 2019) ;</li>
+    <li>les <strong>intérêts économisés</strong> sur la dette évitée, au taux de marché de {{ H.tauxMarche.valeur | num(1) }} % ;</li>
+    <li>l'effet d'une <strong>baisse de l'écart de taux</strong> : {{ H.reactionMarches.valeur }} points de base par point de PIB d'amélioration du solde, plafonné à {{ H.reactionMarches.plafond }}. Il ne s'applique qu'à la part de dette refinancée chaque année ({{ (H.refinancement.valeur * 100) | num(0) }} %) ;</li>
+    <li>la perte de dividendes après les ventes d'actifs.</li>
+  </ul>
+  <p>La dette évolue avec le déficit, les ventes d'actifs et les ajustements stock-flux implicites de la trajectoire de référence. Les ratios sont calculés sur le PIB simulé : une récession fait donc monter mécaniquement le ratio d'endettement, même à dette inchangée.</p>
+
+  <h2 id="incidence">7. L'incidence</h2>
+  <p>Chaque mesure reçoit un profil qui répartit sa charge nette entre groupes de ménages, entreprises, entités fédérées, non-résidents et fraudeurs. Le site distingue la perte de revenu de la perte de services publics. La méthode et les profils sont détaillés sur la page <a href="/incidence/">Qui paie ?</a>.</p>
+
+  <h2 id="controle">8. Les contrôles</h2>
+  <p>Trois scripts vérifient, à chaque publication, que :</p>
+  <ul>
+    <li>la somme des {{ sim.stats.chiffrees }} montants du classeur est bien de {{ (sim.stats.naif / 1000) | num(1) }} Md€, et qu'une simulation sans mesure reproduit exactement la trajectoire de référence ;</li>
+    <li>chaque mesure a une qualification complète, une famille et une justification, et chaque source citée existe ;</li>
+    <li>la cascade du chapitre 4 se referme exactement sur l'amélioration du solde ;</li>
+    <li>les variantes de sensibilité vont dans le sens attendu (multiplicateurs plus élevés, PIB plus bas) ;</li>
+    <li>le simulateur, côté navigateur, reproduit les chiffres des pages statiques ;</li>
+    <li>les liens internes, les ancres et les renvois vers Fumée blanche et Sociopo pointent vers des pages existantes.</li>
+  </ul>
+  <p>Le code est ouvert, et les données sont téléchargeables en JSON et en CSV. Une erreur, une meilleure source ou un chiffrage plus solide ? Le dépôt du site accueille les corrections.</p>
+</div>

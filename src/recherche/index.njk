@@ -1,0 +1,26 @@
+---
+layout: layouts/base.njk
+title: "Rechercher"
+description: "Recherche plein texte dans les 263 fiches de mesures, les familles, le dossier et les pages du site."
+fil: [["Rechercher", false]]
+nonIndexe: true
+head: '<link rel="stylesheet" href="/pagefind/pagefind-ui.css">'
+---
+<div class="prose">
+  <h1>Rechercher</h1>
+  <p class="muet">Dans les {{ sim.stats.total }} fiches de mesures, en français et dans la langue originale du classeur, dans les familles, le dossier et toutes les pages du site.</p>
+</div>
+<div id="recherche" class="recherche-zone"></div>
+<noscript><p>La recherche nécessite JavaScript. La <a href="/mesures/">liste des 263 mesures</a> peut aussi être filtrée sans recherche.</p></noscript>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    if (typeof PagefindUI === "undefined") {
+      document.getElementById("recherche").innerHTML = "<p>L'index de recherche n'est pas disponible dans cette version du site. Utilisez la <a href=\"" + document.querySelector('a.marque').getAttribute('href') + "mesures/\">liste des mesures</a>.</p>";
+      return;
+    }
+    var ui = new PagefindUI({ element: "#recherche", showSubResults: true, showImages: false });
+    var q = new URLSearchParams(location.search).get("q");
+    if (q) ui.triggerSearch(q);
+  });
+</script>

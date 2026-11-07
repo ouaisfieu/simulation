@@ -1,0 +1,41 @@
+---
+layout: layouts/base.njk
+nav: comparaisons
+title: "Comparaisons européennes"
+description: "Irlande, Portugal, Grèce : ce que les consolidations de la crise de l'euro disent des multiplicateurs budgétaires et du coût social d'un ajustement rapide."
+fil: [["Comparaisons UE", false]]
+---
+{%- set P = sim.pmc -%}
+<div class="prose">
+  <h1>Irlande, Portugal, Grèce : les leçons de la crise de l'euro</h1>
+  <p class="chapo">Entre 2010 et 2014, plusieurs pays de la zone euro ont consolidé leurs finances publiques sous la contrainte de programmes d'aide. Leur expérience éclaire deux questions : combien coûte un ajustement rapide en croissance et en emplois, et à quel point les prévisions l'ont sous-estimé.</p>
+</div>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Pays</th><th scope="col">Ajustement</th><th scope="col">Activité et emploi</th><th scope="col">Source</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Irlande, 2008-2014</th><td>32 Md€ de hausses d'impôts et de coupes, environ 20 % du PIB ; programme UE-FMI de 67,5 Md€ (2010-2013), mesures de 8 % du PIB dont deux tiers en dépenses</td><td>Chômage au-delà de 15 % en 2011 ; retour sur les marchés mi-2012</td><td><a href="{{ sim.sourcesParCle['ifac-2014'].url }}">IFAC via Irish Times</a>, <a href="{{ sim.sourcesParCle['imf-ireland'].url }}">FMI</a></td></tr>
+    <tr><th scope="row">Portugal, 2011-2014</th><td>Programme UE-FMI de 78 Md€ ; objectifs budgétaires atteints en partie grâce à des mesures ponctuelles</td><td>Chômage record de 17,7 % au premier trimestre 2013 ; impact social non suivi par le programme</td><td><a href="{{ sim.sourcesParCle['ec-portugal-2016'].url }}">Commission</a>, <a href="{{ sim.sourcesParCle['te-portugal-2013'].url }}">Trading Economics (INE)</a></td></tr>
+    <tr><th scope="row">Grèce, 2010-2012</th><td>Solde primaire corrigé de la conjoncture amélioré d'environ 15 points de PIB en trois ans ; restructuration de la dette en 2012</td><td>Production en baisse de 22 % entre 2008 et 2012 ; chômage d'environ 27 % ; dette encore à 157 % du PIB fin 2012</td><td><a href="{{ sim.sourcesParCle['imf-greece-2013'].url }}">FMI</a></td></tr>
+    <tr><th scope="row">Belgique, 1993-1998</th><td>Solde structurel amélioré de 9 points de PIB en six ans</td><td>Croissance potentielle de 2,1 % ; taux en baisse grâce à la convergence vers l'euro</td><td><a href="/precedent-1993-2000/">BNB (2015)</a></td></tr>
+    <tr><th scope="row">Belgique, 2027-2028 (simulé)</th><td>{{ (P.brut[2028] / sim.refPib[2028] * 100) | num(1) }} points de PIB de mesures brutes en deux ans ; solde amélioré de {{ (P.solde[2028] - P.soldeRef[2028]) | num(1) }} points en 2028</td><td>PIB inférieur de {{ (P.ecartPib[2028] | abs) | num(1) }} % à la référence et environ {{ (P.emploi[2028] | abs) | num(0) }} 000 emplois de moins en 2028 (scénario central)</td><td><a href="/dossier/deux-ans/">ce site</a></td></tr>
+  </tbody>
+</table></div>
+<div class="prose">
+  <h2>La leçon des multiplicateurs</h2>
+  <p>En octobre 2012, le FMI a publié un encadré devenu célèbre. Les prévisions de croissance des programmes européens reposaient implicitement sur des multiplicateurs budgétaires d'environ 0,5 : un euro d'austérité retirait 50 centimes d'activité. Dans la réalité de la crise, ils se situaient plutôt entre 0,9 et 1,7. Olivier Blanchard et Daniel Leigh l'ont confirmé en 2013. Plus un pays prévoyait de consolider, plus sa croissance décevait par rapport aux prévisions.</p>
+  <p>Trois facteurs expliquaient ces multiplicateurs élevés, et il faut se demander s'ils s'appliqueraient à la Belgique de 2027 :</p>
+  <ul>
+    <li><strong>Une politique monétaire bloquée.</strong> Des taux déjà au plancher et une banque centrale commune à toute la zone. <em>En partie vrai en 2027 :</em> la BCE ne réagirait pas à une consolidation belge, même si ses taux ne sont plus à zéro.</li>
+    <li><strong>Des consolidations simultanées</strong> dans de nombreux pays partenaires. <em>Peu probable en 2027,</em> même si la France consolide aussi.</li>
+    <li><strong>Des systèmes financiers fragiles</strong> et des ménages endettés. <em>Pas le cas de la Belgique,</em> dont les ménages disposent d'un important coussin d'épargne : leur richesse financière nette atteignait 1 408 Md€ au deuxième trimestre 2026, plus du double du PIB (<a href="{{ sim.sourcesParCle['bam-patrimoine-2026'].url }}">BNB, via Business AM</a>).</li>
+  </ul>
+  <p>C'est pourquoi le scénario central du site retient des multiplicateurs intermédiaires, et le scénario « sévère » des valeurs proches de celles de la crise. Avec ces derniers et des rendements élevés, le PIB de 2028 serait {{ (sim.pibPire.ecartPib[2028] | abs) | num(1) }} % sous la référence.</p>
+
+  <h2>Ce qui distingue la Belgique</h2>
+  <ul>
+    <li><strong>Pas de perte d'accès aux marchés.</strong> La Belgique emprunte toujours, notée AA- par S&amp;P en octobre 2026. Mais l'écart de taux avec l'Allemagne a franchi 100 points de base pendant la crise politique de l'automne.</li>
+    <li><strong>Pas de crise bancaire</strong> à financer, contrairement à l'Irlande.</li>
+    <li><strong>Des stabilisateurs automatiques puissants.</strong> Ils amortissent le choc pour les ménages, mais rendent aussi le budget plus sensible à la conjoncture : chaque point de PIB perdu dégrade le solde de 0,6 point.</li>
+    <li><strong>Une indexation automatique des revenus</strong>, presque unique en Europe. Les hausses de TVA y rapportent beaucoup moins qu'ailleurs, et les freins à l'indexation y pèsent directement sur le pouvoir d'achat.</li>
+  </ul>
+</div>

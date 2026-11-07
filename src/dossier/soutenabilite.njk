@@ -1,0 +1,84 @@
+---
+layout: layouts/chapitre.njk
+chapitre: 6
+title: "Est-ce soutenable ? Cinq tests"
+description: "Le paquet maximal cohérent passé au crible de cinq tests de soutenabilité : budgétaire, économique, social, juridique et institutionnel, politique."
+fil: [["Dossier", "/dossier/"], ["Est-ce soutenable ?", false]]
+permalink: /dossier/soutenabilite/
+---
+{%- set P = sim.pmc -%}{%- set F = sim.faisabilite -%}
+{%- set totF = F.horsPortee.accessible[2029] + F.horsPortee.difficile[2029] -%}
+<p class="chapo">« Soutenable » a plusieurs sens. Une trajectoire peut stabiliser la dette tout en étant socialement intenable, juridiquement impossible ou politiquement introuvable. Le paquet maximal cohérent est passé ici au crible de cinq tests.</p>
+
+<h2>1. Le test budgétaire : la dette se stabilise-t-elle ?</h2>
+<p><span class="statut oui">Oui, et au-delà du nécessaire.</span></p>
+<p>Un pays stabilise sa dette quand son solde primaire, hors intérêts, couvre l'écart entre le taux d'intérêt moyen de sa dette et la croissance nominale de son économie. Pour la Belgique d'aujourd'hui, avec une dette de 110 % du PIB, un taux implicite d'environ 2,5 % (qui monte vers 3 %) et une croissance nominale d'environ 3 %, cela demande un solde primaire proche de l'équilibre.</p>
+<ul>
+  <li><strong>À politique inchangée :</strong> le déficit primaire est de {{ (sim.base.soldePrimaire[3] | abs) | num(1) }} % du PIB en 2028, et la dette monte.</li>
+  <li><strong>Avec le paquet maximal cohérent :</strong> l'excédent primaire atteint {{ P.soldePrimaire[2028] | num(1) }} % du PIB en 2028, et la dette baisse.</li>
+</ul>
+<p>Les règles européennes sont respectées avec une large marge :</p>
+<ul>
+  <li>déficit sous 3 % {% if P.indicateurs.soldeSous3 %}dès {{ P.indicateurs.soldeSous3 }}{% endif %}, ce qui permettrait de clore la procédure de déficit excessif bien avant l'échéance de 2029 ;</li>
+  <li>croissance des dépenses nettes nettement sous les plafonds de 2,5 % (2027) et 2,1 % (2028).</li>
+</ul>
+<p>Le paquet dépasse toutefois l'objectif. Il produit des excédents durables ({{ P.solde[2029] | num(1) }} % en 2029, {{ P.solde[2031] | num(1) }} % en 2031), que ni les règles européennes ni la dynamique de la dette n'exigent. À titre de comparaison, la Belgique des années 1990 visait un excédent primaire de plus de 6 % du PIB, mais avec des taux longs proches de 9 % au début de la période (voir le <a href="/precedent-1993-2000/">précédent de 1993-2000</a>). Avec les taux actuels, il en faut beaucoup moins.</p>
+
+<h2>2. Le test économique : la croissance tient-elle ?</h2>
+<p><span class="statut partiel">Coûteux et risqué.</span></p>
+<p>Le scénario central chiffre l'ampleur du choc :</p>
+<ul>
+  <li>l'activité recule en 2027 ({{ P.croissance[2027] | num(1) }} %) ;</li>
+  <li>le PIB reste {{ (P.ecartPib[2028] | abs) | num(1) }} % sous la référence en 2028 ;</li>
+  <li>environ {{ (P.emploi[2028] | abs) | num(0) }} 000 emplois sont perdus.</li>
+</ul>
+<p>Trois risques s'ajoutent à ce que le modèle mesure :</p>
+<ul>
+  <li><strong>L'évitement.</strong> Globalisation, impôt sur la fortune, plus-values à 30 %, cotisation sur les revenus mobiliers et loyers réels frappent la même assiette en même temps. Le site porte l'érosion à {{ (P.erosion * 100) | num(0) }} %, mais l'expérience d'autres pays montre qu'un tel empilement peut provoquer des départs de contribuables et d'avoirs difficiles à chiffrer.</li>
+  <li><strong>La compétitivité.</strong> Le saut d'index du catalogue s'accompagne d'une cotisation de modération à charge des employeurs. Il ne baisse donc pas le coût salarial : il ponctionne les revenus sans soulager les entreprises. S'y ajoutent la fin des réductions de cotisations, des RDT plus stricts et une taxe bancaire.</li>
+  <li><strong>L'investissement.</strong> Les mesures favorables à la croissance du catalogue (revues de dépenses, réorientation vers l'investissement public, simplification réglementaire) n'ont pas d'effet en deux ans. Le paquet est donc presque entièrement fait de prélèvements et de coupes.</li>
+</ul>
+
+<h2>3. Le test social : qui le supporte ?</h2>
+<p><span class="statut non">Lourd pour tous les revenus.</span></p>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">En 2029</th><th scope="col" class="n">Charge totale (Md€)</th><th scope="col" class="n">Par ménage (€/an)</th><th scope="col" class="n">% du revenu disponible</th><th scope="col" class="n">dont en revenu</th></tr></thead>
+  <tbody>
+  {%- for g in ["D13", "D47", "D89", "D10"] %}{% set x = P.incidence[g] %}
+    <tr><th scope="row">{{ x.label }}</th><td class="n">{{ (x.total[2029] / 1000) | num(1) }}</td><td class="n">{{ x.parMenage[2029] | num(0) }}</td><td class="n">{{ x.pctRevenu[2029] | num(1) }} %</td><td class="n">{{ x.pctRevenuMonetaire[2029] | num(1) }} %</td></tr>
+  {%- endfor %}
+  </tbody>
+</table></div>
+<p>La charge est très progressive en montant. Elle reste pourtant élevée en bas de l'échelle, parce que le catalogue contient aussi un saut d'index, une TVA plus lourde, une norme santé plus stricte, le gel du revenu d'intégration et un ciblage des allocations. En 2025, le risque de pauvreté touchait 10,9 % de la population, et les transferts sociaux le divisent par deux. Un choc de cette taille sur les revenus et les soins des trois premiers déciles le ferait remonter.</p>
+<p>Ces chiffres sont des ordres de grandeur ; le <a href="/incidence/">module « Qui paie ? »</a> détaille la méthode et ses limites.</p>
+
+<h2>4. Le test juridique et institutionnel : peut-on le faire en deux ans ?</h2>
+<p><span class="statut non">Pas pour une part importante.</span></p>
+<p>Sur {{ (totF / 1000) | num(0) }} Md€ de rendement en régime, environ <strong>{{ (F.horsPortee.difficile[2029] / 1000) | num(0) }} Md€ ({{ (F.horsPortee.difficile[2029] / totF * 100) | num(0) }} %)</strong> dépendent de mesures qui sortent du pouvoir fédéral, exigent une loi spéciale ou une réforme de l'État, ou demandent au moins deux ans de mise en place. Les principaux obstacles :</p>
+<ul>
+  <li><strong>La loi spéciale de financement</strong> (dotations aux Communautés et Régions, responsabilisation pension) exige une majorité des deux tiers et une majorité dans chaque groupe linguistique. Le BFP juge sa refonte peu envisageable hors réforme de l'État.</li>
+  <li><strong>Les entités fédérées</strong> décident seules de leur budget : la « contribution des Régions » ({{ (F.competence.R[2029] / 1000) | num(0) }} Md€) suppose un accord des gouvernements flamand, wallon, bruxellois et communautaires.</li>
+  <li><strong>L'impôt sur la fortune et la globalisation</strong> supposent un cadastre des patrimoines financiers et un rapportage bancaire que la Belgique ne possède pas encore.</li>
+  <li><strong>La Constitution et le droit européen</strong> encadrent plusieurs mesures : principe d'égalité devant l'impôt, principe de standstill en matière de droits sociaux (article 23), droits acquis des pensionnés, libre circulation pour la taxation des non-résidents. Le financement monétaire par la BCE est, lui, interdit par les traités.</li>
+</ul>
+
+<h2>5. Le test politique : quelle majorité ?</h2>
+<p><span class="statut non">Aucune.</span></p>
+<p>Les {{ sim.stats.chiffrees }} montants du BFP viennent des programmes de onze partis, de la gauche radicale à l'extrême droite :</p>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Parti (programme 2024)</th><th scope="col" class="n">Mesures au classeur</th><th scope="col" class="n">Somme brute (Md€)</th></tr></thead>
+  <tbody>{% for p in sim.partis %}<tr><th scope="row">{{ p.parti }}</th><td class="n">{{ p.n }}</td><td class="n">{{ (p.montant / 1000) | num(1) }}</td></tr>{% endfor %}</tbody>
+</table></div>
+<p>Le paquet réunit l'impôt sur la fortune du PVDA-PTB et du PS, la suppression de la coopération au développement voulue par la N-VA, le modèle danois de l'asile du Vlaams Belang et la fin de la voiture-salaire défendue par Ecolo et Groen. Aucun parti ne porte plus d'une fraction de cet ensemble.</p>
+<p>À l'automne 2026, la majorité Arizona n'est pas parvenue à s'accorder sur un effort de 10 Md€ d'ici 2029. La TVA, l'indexation et les soins de santé figuraient parmi les pistes qui la divisaient (<a href="{{ sim.sourcesParCle['rtbf-pistes-2026'].url }}">RTBF</a>, <a href="{{ sim.sourcesParCle['dh-bouton-urgence'].url }}">La DH</a>). Le simulateur <a href="https://ouaisfieu.github.io/sims/conclave/">Fumée blanche</a> recense les lignes rouges publiques de chacun des cinq partis de la coalition.</p>
+<p>Le paquet maximal est sept à huit fois plus lourd que cet effort, et il contient toutes ces pistes à la fois.</p>
+
+<h2>Le verdict</h2>
+<div class="verdict">
+  <div class="verdict-ligne"><strong>Budgétaire</strong><span><span class="statut oui">Oui</span> : la dette baisse, les règles européennes sont respectées, avec un excédent superflu.</span></div>
+  <div class="verdict-ligne"><strong>Économique</strong><span><span class="statut partiel">Douteux</span> : deux ans de quasi-stagnation, des pertes d'emplois et un fort risque d'évitement.</span></div>
+  <div class="verdict-ligne"><strong>Social</strong><span><span class="statut non">Non</span> : tous les déciles perdent beaucoup, y compris les plus modestes.</span></div>
+  <div class="verdict-ligne"><strong>Juridique</strong><span><span class="statut non">Non en deux ans</span> pour environ un tiers du rendement.</span></div>
+  <div class="verdict-ligne"><strong>Politique</strong><span><span class="statut non">Non</span> : aucune majorité imaginable.</span></div>
+</div>
+<p>La conclusion pratique : le catalogue est trop riche pour être appliqué en entier, et il n'a pas besoin de l'être. Le <a href="/dossier/suffisant/">chapitre suivant</a> cherche ce qui suffirait.</p>

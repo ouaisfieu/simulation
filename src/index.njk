@@ -1,0 +1,64 @@
+---
+layout: layouts/base.njk
+nav: accueil
+description: "Que se passerait-il si la Belgique appliquait en 2027 et 2028 les 263 mesures du catalogue budgétaire du Bureau fédéral du Plan ? Réponse chiffrée, mesure par mesure, avec un simulateur."
+---
+{%- set P = sim.pmc -%}{%- set S = sim.stats -%}
+{%- set pib29 = sim.refPib[2029] -%}
+<section class="hero prose">
+  <p class="surtitre">Dossier · situation au {{ maj | dateFr }}</p>
+  <h1>Et si la Belgique adoptait les 263 mesures ?</h1>
+  <p class="chapo">Le 1<sup>er</sup> juin 2026, le Bureau fédéral du Plan a publié, à la demande du ministre du Budget, un catalogue de {{ S.total }} pistes pour assainir les finances fédérales. Que se passerait-il si on les appliquait toutes en 2027 et en 2028, puis qu'on les gardait ? Ce site les examine une à une, chiffre l'ensemble et teste sa soutenabilité.</p>
+  <div class="boutons">
+    <a class="bouton" href="#reponse">La réponse en cinq points</a>
+    <a class="bouton secondaire" href="/simulateur/">Ouvrir le simulateur</a>
+    <a class="bouton secondaire" href="/mesures/">Parcourir les {{ S.total }} mesures</a>
+  </div>
+</section>
+
+<div class="tuiles">
+  <div class="tuile"><span class="tuile-label">Mesures au catalogue</span><span class="tuile-valeur">{{ S.total }}</span><span class="tuile-detail">dont {{ S.chiffrees }} seulement chiffrées par le BFP</span></div>
+  <div class="tuile"><span class="tuile-label">Somme naïve des {{ S.chiffrees }} montants</span><span class="tuile-valeur">{{ S.naif | md }} Md€</span><span class="tuile-detail">doublons, variantes et ventes d'actifs compris</span></div>
+  <div class="tuile accent"><span class="tuile-label">Paquet maximal cohérent</span><span class="tuile-valeur">{{ P.brut[2029] | num(0) }} Md€</span><span class="tuile-detail">par an en régime, soit {{ (P.brut[2029] / pib29 * 100) | num(1) }} % du PIB ({{ P.actives }} mesures en vigueur)</span></div>
+  <div class="tuile"><span class="tuile-label">Solde public en 2028</span><span class="tuile-valeur">{{ P.solde[2028] | num(1) }} %</span><span class="tuile-detail">du PIB, au lieu de {{ P.soldeRef[2028] | num(1) }} % sans les mesures</span></div>
+  <div class="tuile"><span class="tuile-label">Activité en 2028</span><span class="tuile-valeur">{{ P.ecartPib[2028] | num(1) }} %</span><span class="tuile-detail">de PIB par rapport à la référence, {{ (P.emploi[2028] | abs) | num(0) }} 000 emplois en moins</span></div>
+  <div class="tuile"><span class="tuile-label">Dette publique en 2031</span><span class="tuile-valeur">{{ P.dette[2031] | num(0) }} %</span><span class="tuile-detail">du PIB, au lieu de {{ P.detteRef[2031] | num(0) }} % à politique inchangée</span></div>
+</div>
+<p class="note-bas">Scénario central du site. Les fourchettes, les variantes et toutes les hypothèses sont modifiables dans le <a href="/simulateur/">simulateur</a> et expliquées dans la <a href="/methode/">méthode</a>.</p>
+
+<section id="reponse" class="prose">
+  <h2>La réponse en cinq points</h2>
+  <ol>
+    <li><p><strong>« Tout » adopter est impossible au sens strict.</strong> Le catalogue n'est pas un programme : c'est un inventaire, dont le BFP dit lui-même qu'il ne privilégie aucune mesure. Il contient {{ S.contradictions }} contradictions directes, comme protéger l'indexation ou la freiner, plafonner les cotisations ou les déplafonner, étendre le troisième pilier ou le supprimer. Il contient aussi de nombreuses variantes d'une même assiette : cinq globalisations des revenus du capital, quatre impôts sur la fortune, quatre taxes sur les plus-values. La seule lecture tenable est un <a href="/dossier/contradictions/">paquet maximal cohérent</a> : tout ce qui peut coexister, soit {{ P.actives }} mesures effectivement en vigueur.</p></li>
+    <li><p><strong>Ce paquet pèse environ {{ P.brut[2029] | num(0) }} milliards d'euros par an.</strong> C'est {{ (P.brut[2029] / pib29 * 100) | num(0) }} % du PIB, en régime de croisière, avant effets retour. Il en rapporte déjà {{ P.brut[2028] | num(0) }} milliards en 2028. C'est sept à huit fois l'effort de 10 milliards sur lequel la majorité Arizona achoppe depuis l'été. La somme naïve des montants du BFP ({{ S.naif | md }} Md€) n'a aucun sens : elle additionne des variantes concurrentes et des ventes d'actifs qui ne réduisent pas le déficit. <a href="/dossier/chiffrage/">Voir la décomposition</a>.</p></li>
+    <li><p><strong>Le déficit disparaît en deux ans.</strong> Il passe de {{ P.soldeRef[2028] | num(1) }} % à {{ P.solde[2028] | num(1) }} % du PIB en 2028, puis à un excédent de {{ P.solde[2029] | num(1) }} % en 2029. La dette publique reflue vers {{ P.dette[2031] | num(0) }} % du PIB en 2031, contre {{ P.detteRef[2031] | num(0) }} % à politique inchangée. Arithmétiquement, les finances publiques redeviennent soutenables. Elles le deviennent même au-delà du nécessaire : un excédent permanent n'est pas un objectif que fixent les règles européennes.</p></li>
+    <li><p><strong>Le prix est une quasi-récession et un choc sur tous les revenus.</strong> Le PIB serait inférieur de {{ (P.ecartPib[2028] | abs) | num(1) }} % à la référence en 2028, et l'économie compterait environ {{ (P.emploi[2028] | abs) | num(0) }} 000 emplois de moins. Le décile le plus aisé perdrait de l'ordre d'un cinquième de son revenu disponible : globalisation, impôt sur la fortune et plus-values s'empilent sur la même assiette. Les trois premiers déciles perdraient aussi quelque {{ sim.pmc.incidence.D13.pctRevenu[2029] | num(0) }} % de leur revenu, en argent et en services, à cause du saut d'index, de la TVA, de la norme santé et des allocations. <a href="/incidence/">Qui paie ?</a></p></li>
+    <li><p><strong>Soutenable ? Oui pour la dette, non pour presque tout le reste.</strong> Le paquet est hors de portée juridique en deux ans : loi spéciale de financement, budgets régionaux, cadastre des patrimoines, négociations européennes. Il est socialement lourd et politiquement introuvable : aucun parti n'en porte plus d'une fraction. Et il est surdimensionné : selon le modèle, {{ sim.suffisant.rendement.familles | length }} familles de mesures sur {{ sim.pmc.familles | length }} suffiraient pour repasser sous 3 % de déficit dès 2028. <a href="/dossier/soutenabilite/">Les cinq tests de soutenabilité</a>.</p></li>
+  </ol>
+</section>
+
+{% set serieRef = { cle: "ref", label: "À politique inchangée", court: "référence", classe: "ref", tirets: true, valeurs: sim.pmc.soldeRef } %}
+{% set seriePmc = { cle: "pmc", label: "Paquet maximal cohérent", court: "paquet maximal", classe: "s1", valeurs: sim.pmc.solde } %}
+{% set serieMed = { cle: "med", label: "Paquet médian", court: "paquet médian", classe: "s2", valeurs: sim.med.solde } %}
+{% courbes { id: "accueil-solde", titre: "Solde de l'ensemble des administrations publiques", sousTitre: "En % du PIB. Zone bleutée : fourchette de sensibilité du paquet maximal (rendements, multiplicateurs, évitement).", annees: sim.annees, series: [serieRef, serieMed, seriePmc], unite: "%", decimales: 1, seuil: { valeur: -3, label: "−3 % (règle UE)" }, bande: { bas: sim.budgetBas.solde, haut: sim.budgetHaut.solde, classe: "s1" }, inclureZero: true } %}
+
+<section>
+  <h2>Explorer</h2>
+  <div class="grille-cartes">
+    <a class="carte" href="/dossier/"><span class="meta">Le cœur du site</span><h3>Le dossier en huit chapitres</h3><p>De l'hypothèse au verdict : catalogue, contradictions, chiffrage, deux années de choc, soutenabilité, ce qui suffirait, limites.</p></a>
+    <a class="carte" href="/simulateur/"><span class="meta">Interactif</span><h3>Le simulateur</h3><p>Choisissez les variantes, le niveau de confiance, les multiplicateurs ; suivez le solde, la dette, l'emploi et l'incidence jusqu'en 2031.</p></a>
+    <a class="carte" href="/mesures/"><span class="meta">Encyclopédie</span><h3>Les {{ S.total }} fiches</h3><p>Texte original, traduction, chiffrage gradé de A à E, famille, contradictions, compétence, délai, qui paie.</p></a>
+    <a class="carte" href="/familles/"><span class="meta">{{ S.familles }} familles</span><h3>Les familles de variantes</h3><p>Les mesures regroupées par assiette : là où l'on ne peut retenir qu'une variante, et là où l'on peut cumuler.</p></a>
+    <a class="carte" href="/contradictions/"><span class="meta">{{ S.contradictions }} contradictions</span><h3>La carte des contradictions</h3><p>Les propositions qui s'excluent mutuellement, et comment le site les tranche.</p></a>
+    <a class="carte" href="/incidence/"><span class="meta">Module</span><h3>Qui paie ?</h3><p>Ménages par déciles, entreprises, entités fédérées : un ordre de grandeur de la charge, en revenu et en services.</p></a>
+    <a class="carte" href="/precedent-1993-2000/"><span class="meta">Module</span><h3>Le précédent de 1993-2000</h3><p>Plan global, indice santé, norme salariale : la Belgique a déjà réussi un assainissement massif. À quelles conditions ?</p></a>
+    <a class="carte" href="/comparaisons/"><span class="meta">Module</span><h3>Irlande, Portugal, Grèce</h3><p>Ce que les consolidations de la crise de l'euro disent des multiplicateurs et du coût social.</p></a>
+    <a class="carte" href="/contexte/"><span class="meta">Actualité</span><h3>Le contexte de novembre 2026</h3><p>Déficit le plus élevé de la zone euro, charges d'intérêts, spread, démission refusée, douzièmes provisoires.</p></a>
+  </div>
+</section>
+
+<section class="prose">
+  <h2>Ce que ce site n'est pas</h2>
+  <p>Ce n'est pas une recommandation. Le BFP le rappelle : l'analyse économique ne saurait se substituer au processus démocratique dans les choix de politique publique. L'hypothèse « tout adopter » est un instrument de mesure, pas un programme. Elle sert à mesurer l'ampleur du catalogue, ses incohérences et les ordres de grandeur en jeu. Plus des trois quarts des montants utilisés sont des estimations du site, gradées de A à E. Le simulateur permet de n'utiliser que les {{ S.chiffrees }} montants du BFP.</p>
+  <p class="note-bas">Projets liés : <a href="https://ouaisfieu.github.io/sims/conclave/mesures/">Fumée blanche</a>, le jeu du conclave et ses fiches par mesure, dont ce site reprend les numéros (BFP-002 à BFP-264) ; <a href="https://ouaisfieu.github.io/sociopo/">Sociopo</a> pour les notions ; <a href="https://ouaisfieu.github.io/appel-de-novembre/">Appel de novembre</a> pour la mobilisation syndicale. <a href="/projets-lies/">Présentation et vérification</a>.</p>
+</section>

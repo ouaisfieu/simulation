@@ -1,0 +1,70 @@
+---
+layout: layouts/chapitre.njk
+chapitre: 3
+title: "Pourquoi « tout » est impossible"
+description: "Les contradictions, variantes et recouvrements du catalogue, et les règles qui permettent d'en tirer un paquet maximal cohérent."
+fil: [["Dossier", "/dossier/"], ["Pourquoi « tout » est impossible", false]]
+permalink: /dossier/contradictions/
+---
+{%- set S = sim.stats -%}
+{%- set nExclusives = 0 %}{% for f in sim.familles %}{% if f.mode == "exclusif" %}{% set nExclusives = nExclusives + 1 %}{% endif %}{% endfor %}
+{%- set statuts = sim.mesures | groupby("statutPmc") -%}
+<p class="chapo">Le catalogue est un inventaire de propositions venues de dizaines d'auteurs. On n'y trouve pas un programme. Il se contredit, se répète et se chevauche. Avant de chiffrer quoi que ce soit, il faut décider ce que « tout adopter » veut dire.</p>
+
+<h2>{{ S.contradictions }} contradictions directes</h2>
+<p>Certaines mesures ne peuvent pas être appliquées ensemble : l'une défait ce que fait l'autre.</p>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Sujet</th><th scope="col">D'un côté</th><th scope="col">De l'autre</th><th scope="col">Paquet cohérent</th></tr></thead>
+  <tbody>
+  {%- for c in sim.contradictions %}
+    <tr><th scope="row">{{ c.sujet }}</th>
+      <td>{% for i in c.a %}<a href="/mesures/{{ sim.parId[i].slug }}/" title="{{ sim.parId[i].t }}">{{ sim.parId[i].ref }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</td>
+      <td>{% for i in c.b %}<a href="/mesures/{{ sim.parId[i].slug }}/" title="{{ sim.parId[i].t }}">{{ sim.parId[i].ref }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</td>
+      <td>{% if c.perdants | length %}écarte {% for i in c.perdants %}{{ sim.parId[i].ref }}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}une seule variante retenue dans la famille{% endif %}</td></tr>
+  {%- endfor %}
+  </tbody>
+</table></div>
+<p>Le cas le plus net est celui de l'<strong>indexation</strong>. Cinq propositions la freinent :</p>
+<ul>
+  <li>un saut d'index généralisé ;</li>
+  <li>une indexation annuelle ;</li>
+  <li>la prolongation du centim'index ;</li>
+  <li>un frein à l'indexation des dépenses ;</li>
+  <li>la suppression pure et simple de l'indexation automatique des salaires.</li>
+</ul>
+<p>Deux autres demandent le contraire : ne pas la suspendre, même partiellement, et abandonner le centim'index. Le BFP relève lui-même une autre contradiction, sur les cotisations sociales : « certains experts proposent de plafonner les cotisations […] alors que d'autres proposent la suppression de tout plafond » (p. 14).</p>
+
+<h2>Des variantes pour une même assiette</h2>
+<p>Plus fréquent encore : plusieurs propositions visent la même base imposable ou le même poste de dépenses, avec des paramètres différents. Le site les regroupe en <a href="/familles/">{{ S.familles }} familles</a>, dont {{ nExclusives }} « exclusives », où une seule variante peut être en vigueur. Par exemple :</p>
+<ul>
+  <li><a href="/familles/f01/">cinq globalisations des revenus du capital</a> chiffrées de 5,6 à 11,3 Md€, et en face, la <em>dual income tax</em> (un taux unique), qui en est l'inverse ;</li>
+  <li><a href="/familles/f02/">quatre impôts sur la fortune</a>, de 2,0 à 7,6 Md€ : les cumuler reviendrait à prélever chaque année plusieurs pour cent des grands patrimoines ;</li>
+  <li><a href="/familles/f03/">quatre taxes sur les plus-values à 30 %</a>, chiffrées avant la contribution de 10 % entrée en vigueur en 2026 ;</li>
+  <li><a href="/familles/f05/">une douzaine de propositions</a> sur les voitures de société, les cartes carburant et les chèques-repas ;</li>
+  <li><a href="/familles/f14/">trois normes de croissance des soins de santé</a> ;</li>
+  <li><a href="/familles/f08/">sept manières</a> d'abandonner, reporter, limiter, réorienter ou régionaliser la baisse d'impôt programmée.</li>
+</ul>
+<p>Additionner ces variantes, c'est compter plusieurs fois la même recette. C'est exactement ce que fait la somme naïve des {{ S.chiffrees }} montants : {{ S.naif | md }} Md€, dont {{ S.financieres | md }} Md€ de ventes d'actifs qui ne réduisent même pas le déficit.</p>
+
+<h2>Les règles du paquet maximal cohérent</h2>
+<p>Pour donner un sens à « tout adopter », le site applique six règles, toutes modifiables dans le simulateur :</p>
+<ol>
+  <li><strong>Une variante par assiette :</strong> la plus large. C'est ce qu'il reste en vigueur quand on adopte toutes les variantes d'un même dispositif. Le paquet médian retient la variante médiane.</li>
+  <li><strong>Les mesures cumulables s'additionnent,</strong> mais au-delà de la plus importante d'une famille, chacune n'est comptée qu'en partie (taux de recouvrement de 50 à 90 % selon la famille).</li>
+  <li><strong>Une variante composite rend sans objet ce qu'elle couvre.</strong> La contribution de Groen sur les gains du patrimoine inclut plus-values et loyers. Supprimer tous les régimes de rémunération alternative inclut les chèques-repas.</li>
+  <li><strong>Les instruments ne s'ajoutent pas à l'objectif qu'ils servent.</strong> Médicaments moins chers, forfaits, soins de faible valeur : ce sont les moyens de tenir la norme de croissance des soins de santé, pas des économies en plus.</li>
+  <li><strong>Les contradictions sont tranchées en faveur du camp majoritaire du catalogue.</strong> Il s'agit presque toujours du camp le plus restrictif : on freine l'indexation, on déplafonne les cotisations, on supprime l'avantage du troisième pilier.</li>
+  <li><strong>Les coûts sont inclus</strong> quand ils ne contredisent rien : crédits d'impôt remboursables, allègements sur le travail, banque d'investissement, incitants énergie-climat.</li>
+</ol>
+
+<h2>Ce qu'il reste</h2>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Statut dans le paquet maximal cohérent</th><th scope="col" class="n">Mesures</th></tr></thead>
+  <tbody>{% for k, v in statuts %}<tr><td>{{ "En vigueur" if k == "retenue" else (k | capitalize) }}</td><td class="n">{{ v | length }}</td></tr>{% endfor %}</tbody>
+</table></div>
+<p>Au total, {{ sim.pmc.actives }} mesures sont en vigueur dans le paquet maximal cohérent et {{ sim.med.actives }} dans le paquet médian. Les autres ne disparaissent pas : elles sont soit incluses dans une variante plus large, soit sans effet direct (procédures, réformes de long terme, glissements neutres), soit écartées par une contradiction.</p>
+
+<h2>Et quelques tensions</h2>
+<p>D'autres mesures sont compatibles en droit, mais se neutralisent en partie :</p>
+<ul>{% for t in sim.tensions %}<li>{{ t.texte }} ({% for i in t.ids %}<a href="/mesures/{{ sim.parId[i].slug }}/">{{ sim.parId[i].ref }}</a>{% if not loop.last %}, {% endif %}{% endfor %})</li>{% endfor %}</ul>
+<p>La <a href="/contradictions/">carte des contradictions</a> reprend tout cela mesure par mesure.</p>

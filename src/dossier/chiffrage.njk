@@ -1,0 +1,55 @@
+---
+layout: layouts/chapitre.njk
+chapitre: 4
+title: "De la somme naïve au solde"
+description: "Décomposition, étape par étape, du passage de la somme naïve des montants du BFP au gain réel pour le solde public en 2028 et en 2029."
+fil: [["Dossier", "/dossier/"], ["De la somme naïve au solde", false]]
+permalink: /dossier/chiffrage/
+---
+{%- set P = sim.pmc -%}{%- set c28 = sim.cascade2028 -%}{%- set c29 = sim.cascade2029 -%}
+{%- macro etape(c, cle) -%}{% for e in c %}{% if e.cle == cle %}{{ (e.valeur / 1000) | num(1) }}{% endif %}{% endfor %}{%- endmacro -%}
+<p class="chapo">Combien rapporterait l'adoption de « tout » ? La réponse dépend de ce que l'on compte. Voici le chemin complet, de la somme brute des montants du BFP jusqu'à l'amélioration effective du solde public.</p>
+
+{% cascade { id: "cascade-2028", titre: "Du catalogue au solde de 2028", sousTitre: "Milliards d'euros. Paquet maximal cohérent, hypothèses centrales.", etapes: c28 } %}
+
+<h2>Les étapes, une à une</h2>
+<ol>
+  <li><strong>{{ etape(c28, "naif") }} Md€ : la somme des {{ sim.stats.chiffrees }} montants du classeur.</strong> C'est le chiffre qu'on obtient en additionnant la colonne du fichier. Il ne veut rien dire.</li>
+  <li><strong>{{ etape(c28, "fin") }} Md€ : les ventes d'actifs.</strong> Les participations dans Belfius, BNP Paribas ou Proximus (15 Md€ chez VB, 10 Md€ chez N-VA) réduisent la dette, pas le déficit au sens du SEC 2010. Elles privent en outre l'État de dividendes.</li>
+  <li><strong>{{ etape(c28, "doublons") }} Md€ : les doublons.</strong> Une seule globalisation, un seul impôt sur la fortune, une seule taxe sur les plus-values, une seule norme santé. On obtient <strong>{{ etape(c28, "bfpOnly") }} Md€</strong> : c'est ce que disent les seuls chiffres du BFP, sans double compte, en retenant chaque fois la variante la plus élevée.</li>
+  <li><strong>{{ etape(c28, "ajust") }} Md€ : les ajustements.</strong> Plusieurs mesures ont été adoptées en partie depuis 2024 (plus-values à 10 %, asile, coopération, retour au travail). D'autres sont assorties d'une condition qui en mange le gain : l'exonération pour enfants à charge n'est supprimée que si les allocations familiales passent à 300 €. Le paquet maximal retient aussi, pour certaines assiettes, une variante plus large que celles du BFP.</li>
+  <li><strong>+{{ etape(c28, "autres") }} Md€ : les mesures que le BFP n'a pas chiffrées.</strong> TVA, saut d'index, contribution des Régions, niches de l'IPP, cotisations des indépendants, fonction publique… Ce sont des estimations du site, de confiance C à E pour la plupart.</li>
+  <li><strong>{{ etape(c28, "couts") }} Md€ : les mesures coûteuses du catalogue</strong> : crédits d'impôt remboursables, allègements sur le travail, banque d'investissement. On arrive au <strong>paquet structurel de {{ etape(c28, "pmc") }} Md€ par an</strong>, en régime, au niveau de 2029.</li>
+  <li><strong>{{ etape(c28, "montee") }} Md€ : la montée en charge.</strong> Tout n'est pas perçu en 2028. Un impôt sur la fortune suppose un cadastre, une globalisation n'est perçue qu'à l'enrôlement, la norme santé s'accumule d'année en année, la suppression des voitures de société est progressive.</li>
+  <li><strong>{{ etape(c28, "fuites") }} Md€ : l'évitement et l'indexation.</strong> Une hausse de TVA relève l'indice santé, donc les salaires publics et les allocations indexés. Les impôts sur le capital provoquent des réorganisations de patrimoine. Ces impôts se cumulent ici sur la même assiette, ce qui porte l'érosion à {{ (P.erosion * 100) | num(0) }} %.</li>
+  <li><strong>{{ etape(c28, "macro") }} Md€ : la récession induite.</strong> Moins d'activité, c'est moins de recettes et plus d'allocations : ce sont les stabilisateurs automatiques (semi-élasticité de {{ sim.hyp.semiElasticite.valeur | num(2) }}).</li>
+  <li><strong>{{ etape(c28, "interets") }} Md€ : les intérêts économisés,</strong> grâce à une dette moins élevée et à un écart de taux un peu réduit.</li>
+</ol>
+<p>Au bout du compte, le solde de 2028 s'améliore de <strong>{{ etape(c28, "final") }} Md€</strong>. C'est le chiffre qui compte pour le déficit. En 2029, mesures pleinement en régime, la même cascade aboutit à <strong>{{ etape(c29, "final") }} Md€</strong>.</p>
+
+{% cascade { id: "cascade-2029", titre: "Du catalogue au solde de 2029", sousTitre: "Milliards d'euros. Mesures en régime de croisière.", etapes: c29 } %}
+
+<h2>Ce que pèse chaque famille</h2>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Famille</th><th scope="col" class="n">2027</th><th scope="col" class="n">2028</th><th scope="col" class="n">2029</th></tr></thead>
+  <tbody>
+  {%- for f in P.familles | limit(20) %}
+    <tr><td><a href="/familles/{{ f.code | lower }}/">{{ f.code }}</a> · {{ f.label }}</td><td class="n">{{ f.brut[2027] | meur }}</td><td class="n">{{ f.brut[2028] | meur }}</td><td class="n">{{ f.brut[2029] | meur }}</td></tr>
+  {%- endfor %}
+  </tbody>
+</table></div>
+<p class="note-bas">Les 20 familles les plus importantes du paquet maximal cohérent, en rendement brut (avant évitement, indexation et effets macroéconomiques). Toutes les familles figurent sur la page <a href="/familles/">Familles</a>.</p>
+
+<h2>Quatre lectures, quatre ordres de grandeur</h2>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Lecture</th><th scope="col" class="n">Mesures en vigueur</th><th scope="col" class="n">Brut 2028 (Md€)</th><th scope="col" class="n">Régime 2029 (Md€)</th><th scope="col" class="n">Solde 2028</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Littérale (impossible)</th><td class="n">{{ sim.litteral.actives }}</td><td class="n">{{ sim.litteral.brut[2028] | num(0) }}</td><td class="n">{{ sim.litteral.brut[2029] | num(0) }}</td><td class="n">{{ sim.litteral.solde[2028] | num(1) }} %</td></tr>
+    <tr><th scope="row">Paquet maximal cohérent</th><td class="n">{{ P.actives }}</td><td class="n">{{ P.brut[2028] | num(0) }}</td><td class="n">{{ P.brut[2029] | num(0) }}</td><td class="n">{{ P.solde[2028] | num(1) }} %</td></tr>
+    <tr><th scope="row">Paquet médian</th><td class="n">{{ sim.med.actives }}</td><td class="n">{{ sim.med.brut[2028] | num(0) }}</td><td class="n">{{ sim.med.brut[2029] | num(0) }}</td><td class="n">{{ sim.med.solde[2028] | num(1) }} %</td></tr>
+    <tr><th scope="row">Montants du BFP seulement</th><td class="n">{{ sim.bfp.actives }}</td><td class="n">{{ sim.bfp.brut[2028] | num(0) }}</td><td class="n">{{ sim.bfp.brut[2029] | num(0) }}</td><td class="n">{{ sim.bfp.solde[2028] | num(1) }} %</td></tr>
+    <tr><th scope="row">Paquet maximal, estimations A et B seulement</th><td class="n">{{ sim.gradeA.actives }}</td><td class="n">{{ sim.gradeA.brut[2028] | num(0) }}</td><td class="n">{{ sim.gradeA.brut[2029] | num(0) }}</td><td class="n">{{ sim.gradeA.solde[2028] | num(1) }} %</td></tr>
+    <tr><th scope="row">Paquet maximal sans les entités fédérées</th><td class="n">{{ sim.sansRegions.actives }}</td><td class="n">{{ sim.sansRegions.brut[2028] | num(0) }}</td><td class="n">{{ sim.sansRegions.brut[2029] | num(0) }}</td><td class="n">{{ sim.sansRegions.solde[2028] | num(1) }} %</td></tr>
+  </tbody>
+</table></div>
+<p>Toutes les lectures cohérentes aboutissent au même constat : le catalogue contient de quoi effacer plusieurs fois le déficit que la majorité n'arrive pas à réduire de 10 Md€. La lecture littérale améliorerait le solde de {{ (sim.litteral.solde[2028] - sim.litteral.soldeRef[2028]) | num(0) }} points de PIB dès 2028 : c'est la mesure exacte de ce qu'elle compte deux fois.</p>

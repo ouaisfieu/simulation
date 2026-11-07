@@ -1,0 +1,80 @@
+---
+layout: layouts/base.njk
+nav: simulateur
+title: "Simulateur"
+description: "Simulez l'adoption des 263 mesures du catalogue budgétaire 2027 : variantes, niveau de confiance, multiplicateurs, évitement, marchés. Solde, dette, croissance, emploi et incidence jusqu'en 2031."
+fil: [["Simulateur", false]]
+scripts: ["/assets/js/simulateur.js"]
+---
+<h1>Simulateur</h1>
+<p class="chapo prose">Partez d'une lecture du catalogue, changez les variantes, retirez des familles, durcissez ou adoucissez les hypothèses. Tout est recalculé à la volée par le même moteur que celui qui produit les chiffres du site. Le lien de la page conserve vos réglages.</p>
+<noscript><p class="encadre attention">Le simulateur a besoin de JavaScript. Les résultats des scénarios de référence figurent dans le <a href="/dossier/">dossier</a>.</p></noscript>
+
+<div class="sim" id="simulateur" data-pagefind-ignore>
+  <form class="sim-commandes" id="sim-form" aria-label="Réglages de la simulation">
+    <fieldset>
+      <legend>Lecture du catalogue</legend>
+      <div class="choix-segment" role="radiogroup">
+        {%- for k, v in sim.hyp.scenarios %}<label><input type="radio" name="sc" value="{{ k }}"{% if k == "pmc" %} checked{% endif %}><span>{{ v.court }}</span></label>{% endfor %}
+      </div>
+      <p class="petit muet" id="sc-desc">{{ sim.hyp.scenarios.pmc.description }}</p>
+    </fieldset>
+    <fieldset>
+      <legend>Rendement des mesures</legend>
+      <div class="choix-segment" role="radiogroup">
+        <label><input type="radio" name="niv" value="bas"><span>Bas</span></label>
+        <label><input type="radio" name="niv" value="central" checked><span>Central</span></label>
+        <label><input type="radio" name="niv" value="haut"><span>Haut</span></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Effets sur l'activité (multiplicateurs)</legend>
+      <div class="choix-segment" role="radiogroup">
+        <label><input type="radio" name="mac" value="doux"><span>Doux</span></label>
+        <label><input type="radio" name="mac" value="central" checked><span>Central</span></label>
+        <label><input type="radio" name="mac" value="severe"><span>Sévère</span></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Fuites</legend>
+      <label class="curseur">TVA perdue via l'indexation <select name="fui">{% for k in ["doux", "central", "severe"] %}<option value="{{ k }}"{% if k == "central" %} selected{% endif %}>{{ (sim.hyp.fuiteIndexation[k] * 100) | num(0) }} %</option>{% endfor %}</select></label>
+      <label class="curseur">Évitement des impôts sur le capital <select name="ero">{% for k in ["doux", "central", "severe"] %}<option value="{{ k }}"{% if k == "central" %} selected{% endif %}>{{ (sim.hyp.erosionCapital[k] * 100) | num(0) }} % (+{{ (sim.hyp.erosionCapital.cumul * 100) | num(0) }} pts par impôt cumulé)</option>{% endfor %}</select></label>
+    </fieldset>
+    <fieldset>
+      <legend>Périmètre</legend>
+      <label class="curseur">Confiance minimale des estimations <select name="gr"><option value="A">A : montants BFP seulement</option><option value="B">B et mieux</option><option value="C">C et mieux</option><option value="D">D et mieux</option><option value="E" selected>Toutes (A à E)</option></select></label>
+      <label class="case"><input type="checkbox" name="reg" checked> Inclure les mesures visant les entités fédérées</label>
+      <label class="case"><input type="checkbox" name="cou" checked> Inclure les mesures coûteuses du catalogue</label>
+      <label class="case"><input type="checkbox" name="ins"> Compter les instruments santé en plus de la norme</label>
+      <label class="case"><input type="checkbox" name="pri" checked> Exécuter les ventes de participations</label>
+    </fieldset>
+    <fieldset>
+      <legend>Hypothèses fines</legend>
+      <label class="curseur">Répercussion des transferts aux Régions : <output id="o-phi">{{ (sim.hyp.repercussionRegions.valeur * 100) | num(0) }} %</output><input type="range" name="phi" min="0" max="100" step="5" value="{{ sim.hyp.repercussionRegions.valeur * 100 }}"></label>
+      <label class="curseur">Taux d'emprunt marginal : <output id="o-tm">{{ sim.hyp.tauxMarche.valeur | num(1) }} %</output><input type="range" name="tm" min="2" max="6" step="0.1" value="{{ sim.hyp.tauxMarche.valeur }}"></label>
+      <label class="curseur">Réaction des marchés : <output id="o-km">{{ sim.hyp.reactionMarches.valeur }} pb par point</output><input type="range" name="km" min="-10" max="15" step="1" value="{{ sim.hyp.reactionMarches.valeur }}"></label>
+    </fieldset>
+    <fieldset class="sim-familles" id="sim-familles">
+      <legend>Familles et variantes</legend>
+      <p class="petit muet">Ouvrez un groupe pour choisir une autre variante ou retirer une famille.</p>
+    </fieldset>
+    <div class="boutons">
+      <button type="button" class="bouton secondaire" id="sim-reset">Réinitialiser</button>
+      <button type="button" class="bouton secondaire" id="sim-lien">Copier le lien</button>
+    </div>
+    <p class="lien-partage muet" id="sim-lien-etat" aria-live="polite"></p>
+  </form>
+
+  <div class="sim-resultats" aria-live="polite">
+    <div id="sim-alerte"></div>
+    <div class="tuiles" id="sim-tuiles" style="margin:0"></div>
+    <div id="sim-g-solde"></div>
+    <div id="sim-g-dette"></div>
+    <div id="sim-g-croissance"></div>
+    <div id="sim-g-cascade"></div>
+    <div id="sim-g-familles"></div>
+    <div id="sim-g-incidence"></div>
+    <details class="graphique" id="sim-liste"><summary><strong>Mesures en vigueur dans ce scénario</strong></summary><div id="sim-liste-contenu"></div></details>
+  </div>
+</div>
+<p class="note-bas prose">Les résultats sont des ordres de grandeur issus d'un modèle simple et transparent, décrit dans la <a href="/methode/">méthode</a>. Ils ne remplacent pas les modèles macroéconomiques du BFP ou de la BNB.</p>

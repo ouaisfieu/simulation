@@ -1,0 +1,57 @@
+---
+layout: layouts/base.njk
+nav: mesures
+title: "Les 263 mesures"
+description: "Les 263 mesures du catalogue « Options de politiques pour l'élaboration du budget 2027 » du Bureau fédéral du Plan : recherche, filtres, chiffrage, familles, contradictions."
+fil: [["Les 263 mesures", false]]
+---
+{%- set S = sim.stats -%}{%- set L = libelles -%}
+<h1>Les {{ S.total }} mesures</h1>
+<p class="chapo">Toutes les propositions du classeur publié par le Bureau fédéral du Plan le 1<sup>er</sup> juin 2026, dans l'ordre et avec la numérotation du classeur (BFP-002 à BFP-264, d'après les lignes du fichier, comme dans <a href="https://ouaisfieu.github.io/sims/conclave/mesures/">Fumée blanche</a>). Chaque fiche donne le texte original, une traduction, le chiffrage gradé et la place de la mesure dans le paquet simulé.</p>
+
+<div class="tuiles">
+  <div class="tuile"><span class="tuile-label">Recettes</span><span class="tuile-valeur">{{ S.parType.R }}</span><span class="tuile-detail">impôts, cotisations, taxes</span></div>
+  <div class="tuile"><span class="tuile-label">Économies</span><span class="tuile-valeur">{{ S.parType.D }}</span><span class="tuile-detail">dépenses en moins</span></div>
+  <div class="tuile"><span class="tuile-label">Coûts</span><span class="tuile-valeur">{{ S.parType.C }}</span><span class="tuile-detail">mesures qui dégradent le solde</span></div>
+  <div class="tuile"><span class="tuile-label">Sans effet direct</span><span class="tuile-valeur">{{ S.parType.P + S.parType.N + S.parType.X }}</span><span class="tuile-detail">procédures, réformes de long terme, glissements neutres</span></div>
+  <div class="tuile"><span class="tuile-label">Transferts et opérations financières</span><span class="tuile-valeur">{{ S.parType.T + S.parType.F }}</span><span class="tuile-detail">charges déplacées vers les Régions, ventes d'actifs</span></div>
+</div>
+
+<div class="filtres" role="search">
+  <label>Rechercher<input type="search" data-filtre="q" placeholder="TVA, pension, voiture…" autocomplete="off"></label>
+  <label>Groupe
+    <select data-filtre="categorie"><option value="">Tous</option>{% for g in ["Capital et patrimoine", "Rémunération et travail", "Consommation et énergie", "Sociétés et secteur financier", "Cotisations sociales", "Sécurité sociale", "Indexation", "État fédéral", "Entités fédérées", "Union européenne", "Opérations financières", "Fraude", "Gouvernance"] %}<option>{{ g }}</option>{% endfor %}</select></label>
+  <label>Type
+    <select data-filtre="type"><option value="">Tous</option>{% for k, v in L.types %}<option value="{{ k }}">{{ v.label }}</option>{% endfor %}</select></label>
+  <label>Confiance
+    <select data-filtre="grade"><option value="">Toutes</option>{% for k in ["A", "B", "C", "D", "E", "—"] %}<option value="{{ k }}">{{ k }}</option>{% endfor %}</select></label>
+  <label>Paquet maximal
+    <select data-filtre="statut"><option value="">Toutes</option><option value="retenue">En vigueur</option><option value="exclue">Non retenue</option></select></label>
+  <label>Langue d'origine
+    <select data-filtre="langue"><option value="">Toutes</option><option value="fr">Français</option><option value="nl">Néerlandais</option><option value="en">Anglais</option><option value="fr-nl">Bilingue</option></select></label>
+  <label>Trier par
+    <select data-tri><option value="ref">Numéro</option><option value="montant">Estimation du site</option><option value="bfp">Montant du BFP</option></select></label>
+</div>
+<p class="compteur" data-compteur aria-live="polite">{{ S.total }} mesures</p>
+<ul class="liste-mesures" data-liste-mesures>
+{%- for m in sim.mesures %}
+  <li data-id="{{ m.id }}" data-texte="{{ m.ref }} {{ m.t }} {{ m.tf or '' }} {{ m.description }} {{ m.famille.label }}" data-groupe="{{ m.famille.groupe }}" data-type="{{ m.typ }}" data-grade="{{ m.gr }}" data-statut="{{ 'retenue' if m.statutPmc == 'retenue' else 'exclue' }}" data-langue="{{ m.langue }}" data-montant="{{ m.est.central }}" data-bfp="{{ m.bfp if m.bfp !== null else '' }}">
+    <a class="titre" href="/mesures/{{ m.slug }}/">{{ m.t }}</a>
+    <div class="ligne-meta">
+      <span>{{ m.ref }}</span>
+      <span class="badge">{{ L.types[m.typ].label }}</span>
+      <span class="badge g{{ m.gr if m.gr != '—' else 'X' }}">{{ m.gr }}</span>
+      <a href="/familles/{{ m.famille.slug }}/">{{ m.famille.code }}</a>
+      {%- if m.statutPmc != "retenue" %}<span>hors paquet</span>{% endif %}
+      <span class="montant">{% if m.bfp !== null %}BFP {{ m.bfp | meur }}{% elif m.typ in ["R", "D", "C", "T"] %}≈ {{ m.est.central | meur }}{% else %}—{% endif %}</span>
+    </div>
+  </li>
+{%- endfor %}
+</ul>
+
+<h2>Les catégories du BFP</h2>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Catégorie (traduction)</th><th scope="col">Libellé original</th><th scope="col" class="n">Mesures</th></tr></thead>
+  <tbody>{% for c in S.parCategorie %}<tr><td>{{ L.categories[c[0]] or c[0] }}</td><td lang="nl" class="muet">{{ c[0] }}</td><td class="n">{{ c[1] }}</td></tr>{% endfor %}</tbody>
+</table></div>
+<p class="note-bas">Le classeur range chaque mesure dans le poste budgétaire qu'elle touche le plus. Les libellés de catégorie sont en néerlandais dans le fichier. Le site regroupe en outre les mesures en {{ S.familles }} <a href="/familles/">familles</a> selon leur assiette. Le classeur comporte 264 lignes : une ligne d'en-tête et 263 mesures. Une dépêche Belga du 2 juin 2026 parlait de 264 mesures, le BFP lui-même de « plus de 250 ».</p>

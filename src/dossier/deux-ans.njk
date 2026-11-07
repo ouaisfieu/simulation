@@ -1,0 +1,63 @@
+---
+layout: layouts/chapitre.njk
+chapitre: 5
+title: "2027-2028 : deux années de choc"
+description: "Croissance, emploi, déficit, dette et charges d'intérêts pendant les deux années d'application du paquet maximal cohérent, avec les fourchettes d'incertitude."
+fil: [["Dossier", "/dossier/"], ["Deux années de choc", false]]
+permalink: /dossier/deux-ans/
+---
+{%- set P = sim.pmc -%}{%- set pib = sim.refPib -%}
+<p class="chapo">En 2027, le paquet maximal cohérent prélève déjà {{ P.brut[2027] | num(0) }} Md€, soit {{ (P.brut[2027] / pib[2027] * 100) | num(1) }} % du PIB. En 2028, {{ P.brut[2028] | num(0) }} Md€, soit {{ (P.brut[2028] / pib[2028] * 100) | num(1) }} %. Peu de pays européens ont resserré leur politique budgétaire aussi vite hors d'une crise financière.</p>
+
+<h2>L'activité</h2>
+<p>Toute consolidation pèse sur l'activité à court terme. La hausse d'un impôt réduit le revenu disponible, la baisse d'une dépense publique réduit directement la demande. L'ampleur dépend de la nature des mesures, que le site résume par des multiplicateurs (voir la <a href="/methode/">méthode</a>) :</p>
+<ul>
+  <li><strong>Les impôts sur le capital et le patrimoine</strong> pèsent peu sur la demande à court terme (multiplicateur central de {{ sim.hyp.multiplicateurs.classes.capital.central | num(2) }}). Ce sont eux qui dominent le paquet.</li>
+  <li><strong>Les économies sur les soins de santé, les salaires publics et les allocations des ménages modestes</strong> pèsent beaucoup plus : de {{ sim.hyp.multiplicateurs.classes.sante.central | num(1) }} à {{ sim.hyp.multiplicateurs.classes.transf_bas.central | num(1) }}.</li>
+</ul>
+<div class="tuiles">
+  <div class="tuile"><span class="tuile-label">Croissance 2027</span><span class="tuile-valeur">{{ P.croissance[2027] | num(1) }} %</span><span class="tuile-detail">au lieu de {{ P.croissanceRef[2027] | num(1) }} %</span></div>
+  <div class="tuile"><span class="tuile-label">Croissance 2028</span><span class="tuile-valeur">{{ P.croissance[2028] | num(1) }} %</span><span class="tuile-detail">au lieu de {{ P.croissanceRef[2028] | num(1) }} %</span></div>
+  <div class="tuile"><span class="tuile-label">PIB fin 2028 / référence</span><span class="tuile-valeur">{{ P.ecartPib[2028] | num(1) }} %</span><span class="tuile-detail">de {{ sim.pibDoux.ecartPib[2028] | num(1) }} % à {{ sim.pibPire.ecartPib[2028] | num(1) }} % selon les hypothèses</span></div>
+  <div class="tuile"><span class="tuile-label">Emploi 2028</span><span class="tuile-valeur">{{ P.emploi[2028] | num(0) }} 000</span><span class="tuile-detail">chômage {{ P.chomage[2028] | num(1) }} % au lieu de {{ sim.base.chomage[3] | num(1) }} %</span></div>
+</div>
+{% set sRef = { label: "À politique inchangée", court: "référence", classe: "ref", tirets: true, valeurs: P.croissanceRef } %}
+{% set sP = { label: "Paquet maximal cohérent", court: "paquet maximal", classe: "s1", valeurs: P.croissance } %}
+{% courbes { id: "g-croissance", titre: "Croissance du PIB en volume", sousTitre: "En % par an", annees: sim.annees, series: [sRef, sP], unite: "%", decimales: 1, inclureZero: true } %}
+<p>Le profil est celui d'une quasi-récession en 2027 : l'économie recule légèrement alors qu'elle devait croître d'environ 1 %. Vient ensuite une reprise lente. Le choc s'aggrave encore en 2029, quand les dernières mesures atteignent leur régime de croisière. À partir de 2030, la croissance dépasse la référence, parce que l'économie rattrape une partie de son retard. Le niveau du PIB, lui, reste inférieur à la référence sur toute la période. L'emploi suit avec retard : le chômage culmine vers 2029.</p>
+<p>C'est le scénario central. Dans la configuration la plus récessive (rendements élevés et multiplicateurs sévères, proches de ceux observés pendant la crise de l'euro), le PIB de 2028 serait {{ (sim.pibPire.ecartPib[2028] | abs) | num(1) }} % sous la référence et l'économie compterait {{ (sim.pibPire.emploi[2028] | abs) | num(0) }} 000 emplois de moins. Le modèle est linéaire : il ne capte ni les faillites en chaîne ni les effets de confiance, qui peuvent amplifier un choc de cette taille.</p>
+
+<h2>Le déficit</h2>
+{% set dRef = { label: "À politique inchangée", court: "référence", classe: "ref", tirets: true, valeurs: P.soldeRef } %}
+{% set dP = { label: "Paquet maximal cohérent", court: "paquet maximal", classe: "s1", valeurs: P.solde } %}
+{% set dM = { label: "Paquet médian", court: "paquet médian", classe: "s2", valeurs: sim.med.solde } %}
+{% courbes { id: "g-solde", titre: "Solde de l'ensemble des administrations publiques", sousTitre: "En % du PIB. Zone : fourchette du paquet maximal, entre hypothèses défavorables et favorables au budget.", annees: sim.annees, series: [dRef, dM, dP], unite: "%", decimales: 1, seuil: { valeur: -3, label: "−3 %" }, bande: { bas: sim.budgetBas.solde, haut: sim.budgetHaut.solde, classe: "s1" }, inclureZero: true } %}
+<p>Le déficit passe sous 3 % du PIB {% if P.indicateurs.soldeSous3 %}dès {{ P.indicateurs.soldeSous3 }}{% else %}au cours de la période{% endif %} et disparaît presque en 2028 ({{ P.solde[2028] | num(1) }} %). Les finances publiques deviennent excédentaires en 2029 ({{ P.solde[2029] | num(1) }} %).</p>
+<p>La fourchette est large. Avec des rendements bas, un évitement fort et des multiplicateurs sévères, le déficit de 2028 resterait de {{ (sim.budgetBas.solde[2028] | abs) | num(1) }} %. Avec les hypothèses inverses, l'excédent atteindrait {{ sim.budgetHaut.solde[2028] | num(1) }} %.</p>
+<p>Dans tous les cas, la trajectoire de dépenses nettes recommandée par le Conseil de l'UE (2,5 % de croissance nominale en 2027, 2,1 % en 2028) serait largement respectée.</p>
+
+<h2>La dette et les intérêts</h2>
+{% set tRef = { label: "À politique inchangée", court: "référence", classe: "ref", tirets: true, valeurs: P.detteRef } %}
+{% set tP = { label: "Paquet maximal cohérent", court: "paquet maximal", classe: "s1", valeurs: P.dette } %}
+{% courbes { id: "g-dette", titre: "Dette publique", sousTitre: "En % du PIB. Zone : fourchette d'hypothèses.", annees: sim.annees, series: [tRef, tP], unite: "%", decimales: 1, bande: { bas: sim.budgetHaut.dette, haut: sim.budgetBas.dette, classe: "s1" } } %}
+<p>La dette cesse de monter dès 2028 et reflue ensuite rapidement : {{ P.dette[2031] | num(0) }} % du PIB en 2031, contre {{ P.detteRef[2031] | num(0) }} % à politique inchangée.</p>
+<p>Deux effets jouent en sens contraire :</p>
+<ul>
+  <li><strong>Moins de déficits, c'est moins de dette,</strong> donc moins d'intérêts à payer. Le modèle compte {{ P.economieInterets[2029] | num(1) }} Md€ économisés en 2029 sur le volume de la dette et {{ P.spread[2029] | num(1) }} Md€ grâce à un écart de taux un peu réduit.</li>
+  <li><strong>Un PIB plus bas gonfle mécaniquement le ratio d'endettement :</strong> c'est l'effet dénominateur. Dans les hypothèses les plus récessives, il l'emporte la première année et le ratio de dette commence par monter.</li>
+</ul>
+<p>Les charges d'intérêts restent malgré tout élevées : {{ P.interets[2031] | num(1) }} % du PIB en 2031, contre {{ (sim.base.soldePrimaire[6] - sim.base.solde[6]) | num(1) }} % à politique inchangée. La dette contractée à taux bas avant 2022 continue d'être refinancée plus cher.</p>
+
+<h2>En résumé</h2>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Paquet maximal cohérent</th>{% for a in sim.annees %}<th scope="col" class="n">{{ a }}</th>{% endfor %}</tr></thead>
+  <tbody>
+    <tr><th scope="row">Mesures, brut (Md€)</th>{% for a in sim.annees %}<td class="n">{{ P.brut[a] | num(1) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">Mesures, net de fuites (Md€)</th>{% for a in sim.annees %}<td class="n">{{ P.net[a] | num(1) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">PIB / référence (%)</th>{% for a in sim.annees %}<td class="n">{{ P.ecartPib[a] | num(2) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">Emploi / référence (milliers)</th>{% for a in sim.annees %}<td class="n">{{ P.emploi[a] | num(0) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">Solde (% PIB)</th>{% for a in sim.annees %}<td class="n">{{ P.solde[a] | num(1) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">Solde primaire (% PIB)</th>{% for a in sim.annees %}<td class="n">{{ P.soldePrimaire[a] | num(1) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">Dette (% PIB)</th>{% for a in sim.annees %}<td class="n">{{ P.dette[a] | num(1) }}</td>{% endfor %}</tr>
+  </tbody>
+</table></div>

@@ -1,0 +1,34 @@
+---
+layout: layouts/base.njk
+nav: familles
+title: "Les familles de mesures"
+description: "Les 263 mesures regroupées en familles selon leur assiette : où l'on ne peut retenir qu'une variante, où l'on peut cumuler, et ce que chaque famille pèse dans le paquet maximal cohérent."
+fil: [["Familles", false]]
+---
+<h1>Les familles de mesures</h1>
+<div class="prose">
+  <p class="chapo">Le catalogue aligne souvent plusieurs propositions pour la même assiette. Le site les regroupe en {{ sim.stats.familles }} familles. C'est ce regroupement qui permet de passer de la somme naïve des montants à un paquet cohérent.</p>
+  <p>Quatre modes de regroupement :</p>
+  <ul>
+    <li><strong>Exclusif.</strong> On ne crée pas quatre impôts sur la fortune ni cinq globalisations. Une seule variante est en vigueur : la plus large dans le paquet maximal, la médiane dans le paquet médian.</li>
+    <li><strong>Cumulatif.</strong> Les mesures s'additionnent. Au-delà de la plus importante, chacune n'est comptée qu'en partie, pour tenir compte des recouvrements.</li>
+    <li><strong>Instruments.</strong> Moyens d'atteindre l'objectif d'une autre famille, par exemple les mesures d'efficience au service de la norme santé. Ils ne sont pas comptés en plus.</li>
+    <li><strong>Neutre ou processus.</strong> Ces mesures n'ont pas d'effet budgétaire direct en 2027-2028.</li>
+  </ul>
+</div>
+{%- set items = [] %}
+{%- for fr in sim.pmc.familles %}{% if fr.brut[2029] | abs > 150 %}{% set items = items.concat([{ label: fr.code + " · " + fr.label, valeur: fr.brut[2029] / 1000, texteValeur: fr.brut[2029] | meur, href: "/familles/" + (fr.code | lower) + "/" }]) %}{% endif %}{% endfor %}
+{% barres { titre: "Ce que pèse chaque famille dans le paquet maximal cohérent", sousTitre: "Rendement annuel en régime (2029), avant évitement, indexation et effets macroéconomiques, en milliards d'euros. Familles de plus de 150 M€ ; les barres rouges sont des coûts.", items: items, unite: "Md€", colonne: "Famille", partLabel: 0.5 } %}
+
+{%- for g in ["Capital et patrimoine", "Rémunération et travail", "Consommation et énergie", "Sociétés et secteur financier", "Cotisations sociales", "Sécurité sociale", "Indexation", "État fédéral", "Entités fédérées", "Opérations financières", "Fraude", "Union européenne", "Gouvernance"] %}
+<h2>{{ g }}</h2>
+<div class="grille-cartes">
+  {%- for f in sim.familles %}{% if f.groupe == g %}
+  <a class="carte" href="/familles/{{ f.slug }}/">
+    <span class="meta">{{ f.code }} · {{ f.membres | length }} mesure{% if f.membres | length > 1 %}s{% endif %} · {{ libelles.modesCourts[f.mode] }}</span>
+    <h3>{{ f.label }}</h3>
+    <p>{% if f.pmc %}Paquet maximal : {{ f.pmc.brut[2029] | meur }} par an en régime.{% else %}Sans effet dans le paquet maximal.{% endif %}</p>
+  </a>
+  {%- endif %}{% endfor %}
+</div>
+{%- endfor %}

@@ -1,0 +1,83 @@
+---
+layout: layouts/base.njk
+nav: contexte
+title: "Le contexte budgétaire"
+description: "Chronologie du budget fédéral belge de juin 2024 à novembre 2026, trajectoire à politique inchangée, cadre européen, marchés et mobilisation sociale."
+fil: [["Contexte", false]]
+---
+{%- set B = sim.base -%}{%- set S = sim.sourcesParCle -%}
+{%- macro src(cle, label) -%}<a class="src" href="{{ S[cle].url }}">{{ label or S[cle].auteur }}</a>{%- endmacro -%}
+{%- macro serie(cle, dec) -%}
+  {%- for a in B.annees -%}<td class="n">{{ B[cle][loop.index0] | num(dec) }}{% if B.estimationSite[cle] and B.estimationSite[cle][loop.index0] %}<sup class="muet" title="Estimation du site">*</sup>{% endif %}</td>{%- endfor -%}
+{%- endmacro -%}
+<div class="prose">
+  <h1>Le contexte budgétaire</h1>
+  <p class="chapo">Le catalogue du Bureau fédéral du Plan n'est pas tombé du ciel. Il arrive au milieu d'une négociation budgétaire bloquée, sous surveillance européenne et sous la pression des marchés. Voici la situation au {{ maj | dateFr }}.</p>
+
+  <h2>La trajectoire à politique inchangée</h2>
+  <p>C'est la « référence » de toutes les simulations du site : ce qui se passerait sans nouvelle mesure. Pour 2025-2028, elle reprend les projections de la Banque nationale (juin 2026) ; pour 2029-2031, les perspectives du Bureau fédéral du Plan (juin 2026). Les quelques valeurs que le site a dû interpoler sont signalées par un astérisque.</p>
+</div>
+<div class="tableau-defilant"><table>
+  <caption class="muet petit">Belgique, ensemble des administrations publiques. En % du PIB sauf mention.</caption>
+  <thead><tr><th scope="col"></th>{% for a in B.annees %}<th scope="col" class="n">{{ a }}</th>{% endfor %}</tr></thead>
+  <tbody>
+    <tr><th scope="row">Croissance réelle (%)</th>{{ serie("croissanceReelle", 1) }}</tr>
+    <tr><th scope="row">Inflation IPCH (%)</th>{{ serie("inflationIPCH", 1) }}</tr>
+    <tr><th scope="row">Solde public</th>{{ serie("solde", 1) }}</tr>
+    <tr><th scope="row">Solde primaire</th>{{ serie("soldePrimaire", 1) }}</tr>
+    <tr><th scope="row">Dette publique</th>{{ serie("dette", 1) }}</tr>
+    <tr><th scope="row">Taux de chômage (%)</th>{{ serie("chomage", 1) }}</tr>
+  </tbody>
+</table></div>
+<p class="note-bas">Sources : {{ src("eurostat-avril-2026", "Eurostat via La DH (avril 2026)") }}, {{ src("bnb-juin-2026", "BNB (juin 2026)") }}, {{ src("bfp-juin-2026", "BFP (juin 2026)") }}. Le déficit se creuse chaque année sans mesure nouvelle, et la charge d'intérêts passerait à 3,5 % du PIB en 2031.</p>
+
+<div class="prose">
+  <h2>Le pouvoir fédéral et la sécurité sociale</h2>
+  <p>L'essentiel du déficit se loge dans l'« Entité I », qui réunit le pouvoir fédéral et la sécurité sociale. Selon le <a href="{{ S['cm-juillet-2026'].url }}">Comité de monitoring de juillet 2026</a>, son déficit passerait de {{ B.entiteI.deficit2026.pctPib | num(1) }} % du PIB en 2026 ({{ B.entiteI.deficit2026.mdEuros | num(1) }} Md€) à {{ B.entiteI.deficit2029.pctPib | num(1) }} % en 2029 ({{ B.entiteI.deficit2029.mdEuros | num(1) }} Md€). Il faudrait au moins {{ B.entiteI.effortMinimal2029 | num(1) }} Md€ d'efforts d'ici 2029 pour respecter la trajectoire européenne, et environ le double pour revenir sous 3 %.</p>
+  <p>Pour mesurer l'ampleur du catalogue : en 2026, l'Entité I dépense {{ B.budget2026.depensesEntiteI | num(1) }} Md€, dont {{ B.budget2026.pensions | num(1) }} Md€ de pensions, {{ B.budget2026.soinsDeSante | num(1) }} Md€ de soins de santé et {{ B.budget2026.transfertsEntites | num(1) }} Md€ de transferts aux entités fédérées. Elle perçoit {{ B.budget2026.recettes | num(1) }} Md€ de recettes. Le paquet maximal cohérent représenterait, en régime, environ {{ (sim.pmc.brut[2029] / B.budget2026.depensesEntiteI * 100) | num(0) }} % de ces dépenses.</p>
+
+  <h2>Le cadre européen</h2>
+  <ul>
+    <li><strong><a href="{{ 'procedure-de-deficit-excessif' | sociopo }}">Procédure de déficit excessif</a></strong> : ouverte le 26 juillet 2024. Le Conseil demande une correction d'ici 2029. Le 3 juin 2026, la Commission a estimé que la Belgique avait pris des mesures suivies d'effets, et la procédure a été tenue en suspens.</li>
+    <li><strong>Plafonds de dépenses nettes</strong> : le cadre réformé de 2024 encadre la croissance des dépenses publiques nettes : {% for a, v in B.regles.plafondDepensesNettes %}{{ v | num(1) }} % en {{ a }}{% if not loop.last %}, {% endif %}{% endfor %}.</li>
+    <li><strong>Défense</strong> : {{ B.regles.clauseDefense }}</li>
+  </ul>
+  <p>Ces règles ne demandent pas un assainissement de l'ampleur du paquet maximal. Le paquet médian les dépasserait déjà largement : il ramènerait le déficit de 2028 à {{ (sim.med.solde[2028] | abs) | num(1) }} % du PIB.</p>
+
+  <h2>Les marchés</h2>
+  <p>Le taux à dix ans de l'État belge est passé d'environ 3,50 % à 4,25 % en quatre mois. Pendant la crise politique d'octobre, l'écart avec l'Allemagne a dépassé 100 points de base, son plus haut niveau depuis 2011. Standard &amp; Poor's a maintenu la note AA-, avec une perspective stable, tout en prévenant qu'elle réagirait à des déficits plus élevés que prévu. Sources : {{ src("economiematin-roi", "Économie Matin") }}, {{ src("lalibre-spread", "La Libre") }}, {{ src("lalibre-sp", "La Libre") }}.</p>
+
+  <h2>Chronologie</h2>
+</div>
+<ol class="frise prose">
+  <li><time datetime="2024-06-09">9 juin 2024</time>Élections fédérales, régionales et européennes.</li>
+  <li><time datetime="2024-07-26">26 juillet 2024</time>Le Conseil de l'UE ouvre une procédure de déficit excessif à l'encontre de la Belgique. {{ src("ce-csr-2026") }}</li>
+  <li><time datetime="2025-02-03">3 février 2025</time>Le gouvernement De Wever prête serment. C'est la <a href="{{ 'coalition-arizona' | sociopo }}">coalition « Arizona »</a> : N-VA, MR, Les Engagés, Vooruit et CD&amp;V.</li>
+  <li><time datetime="2025-06-20">20 juin 2025</time>Le Conseil fixe à 2029 l'échéance pour corriger le déficit excessif et arrête une trajectoire de dépenses nettes. {{ src("conseil-edp-2025") }}</li>
+  <li><time datetime="2025-11-24">24 novembre 2025</time>Accord budgétaire pluriannuel : 9,2 Md€ d'ici 2029, doublement de la taxe sur les comptes-titres, plafonnement de l'indexation en 2026 et 2028. {{ src("lavenir-accord-2025") }}</li>
+  <li><time datetime="2025-11-24">24-26 novembre 2025</time>« Appel de novembre » : trois jours de grève à l'appel du front commun syndical. {{ src("csc-appel-2025") }}</li>
+  <li><time datetime="2026-03-04">4 mars 2026</time>La Cour des comptes juge fragiles les recettes attendues du budget 2026 : 1,9 Md€ du retour au travail, 1,2 Md€ de la lutte contre la fraude. {{ src("cdc-budget-2026") }}</li>
+  <li><time datetime="2026-03-24">24 mars 2026</time>Le Comité de monitoring chiffre à 4,9 Md€ les économies supplémentaires à trouver d'ici 2029. {{ src("cm-mars-2026") }}</li>
+  <li><time datetime="2026-04-03">3 avril 2026</time>La Chambre adopte la contribution de 10 % sur les plus-values financières, applicable depuis le 1<sup>er</sup> janvier 2026. {{ src("pm-plusvalues") }}</li>
+  <li><time datetime="2026-04-22">22 avril 2026</time>Eurostat : avec 5,2 % du PIB, la Belgique a eu en 2025 le plus gros déficit de la zone euro. {{ src("eurostat-avril-2026") }}</li>
+  <li><time datetime="2026-05-21">21 mai 2026</time>Prévisions de printemps de la Commission : déficit de 5,2 % en 2026 et de 5,4 % en 2027. {{ src("ce-printemps-2026") }}</li>
+  <li><time datetime="2026-06-01">1<sup>er</sup> juin 2026</time><strong>Le Bureau fédéral du Plan publie « Options de politiques pour l'élaboration du budget 2027 » et le classeur des 263 mesures</strong>, à la demande du ministre du Budget. {{ src("bfp-rapport") }}</li>
+  <li><time datetime="2026-06-03">3 juin 2026</time>La Commission estime que la Belgique a pris des mesures suivies d'effets : la procédure est tenue en suspens. {{ src("ce-csr-2026") }}</li>
+  <li><time datetime="2026-06-12">12-13 juin 2026</time>Projections de la BNB et du BFP. Le gouverneur de la BNB estime qu'il faudrait environ 11 Md€, et même 14 Md€ avec les baisses de charges prévues, pour revenir à un déficit de 4 % du PIB. {{ src("rtbf-bnb-juin") }}</li>
+  <li><time datetime="2026-07-06">6 juillet 2026</time>Comité de monitoring : 7,7 Md€ à trouver d'ici 2029, et des charges d'intérêts qui passent de 10 à plus de 18 Md€. {{ src("cm-juillet-2026") }}</li>
+  <li><time datetime="2026-10-11">11 octobre 2026</time>Des notes de travail évoquent une TVA à 22 % et à 9 % (près de 2 Md€), une réforme du statut BIM et une norme santé alignée sur la croissance. {{ src("rtbf-pistes-2026") }}</li>
+  <li><time datetime="2026-10-16">16 octobre 2026</time>L'objectif passe à 10 Md€ d'ici 2029, avec un « bouton d'urgence » pour rassurer les marchés. {{ src("dh-bouton-urgence") }}</li>
+  <li><time datetime="2026-10-22">22 octobre 2026</time>L'écart de taux avec l'Allemagne dépasse 100 points de base. {{ src("lalibre-spread") }}</li>
+  <li><time datetime="2026-10-24">24 octobre 2026</time>S&amp;P maintient la note AA-, perspective stable. {{ src("lalibre-sp") }}</li>
+  <li><time datetime="2026-11-02">2 novembre 2026</time>Bart De Wever présente la <a href="{{ 'demission-du-gouvernement' | sociopo }}">démission</a> de son gouvernement au Roi. {{ src("lavenir-roi") }}</li>
+  <li><time datetime="2026-11-04">4 novembre 2026</time>Le spectre des <a href="{{ 'douziemes-provisoires' | sociopo }}">douzièmes provisoires</a> revient. Le « bouton d'urgence » discuté prévoirait un an sans indexation des dépenses fédérales, soit environ 4 Md€. {{ src("lavenir-douziemes") }}</li>
+  <li><time datetime="2026-11-06">6 novembre 2026</time>Le Roi refuse la démission : les négociations budgétaires reprennent. {{ src("lavenir-roi") }}</li>
+  <li class="a-venir"><time datetime="2026-11-16">16 novembre 2026 (à venir)</time>Rapport au Roi sur l'état des négociations.</li>
+  <li class="a-venir"><time datetime="2026-11-23">23 novembre 2026 (à venir)</time>Manifestation nationale à Bruxelles, à l'appel de la FGTB, de la CSC et de Synova. {{ src("bt-manif-2026") }}</li>
+  <li class="a-venir"><time datetime="2027-01-01">1<sup>er</sup> janvier 2027</time>À défaut de budget voté, l'État fonctionne sous douzièmes provisoires.</li>
+</ol>
+<div class="prose">
+  <h2>La mobilisation sociale</h2>
+  <p>Le <a href="{{ 'front-commun-syndical' | sociopo }}">front commun syndical</a> conteste depuis 2025 la limitation des allocations de chômage dans le temps, la réforme des pensions et les atteintes à l'indexation. Les trois jours de grève de novembre 2025 ont été suivis de plusieurs manifestations nationales en 2026. Le projet <a href="https://ouaisfieu.github.io/appel-de-novembre/">Appel de novembre</a> documente cette mobilisation de son point de vue, revendiqué. Voir aussi la notice <a href="{{ 'mobilisations-contre-l-arizona' | sociopo }}">Mobilisations contre l'Arizona</a> sur Sociopo.</p>
+  <p class="note-bas">Ce site n'a pas de position sur le budget à adopter. Il simule une hypothèse extrême pour en mesurer les ordres de grandeur.</p>
+</div>

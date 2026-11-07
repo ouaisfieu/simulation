@@ -1,0 +1,63 @@
+---
+layout: layouts/chapitre.njk
+chapitre: 1
+title: "L'hypothèse : tout adopter, pendant deux ans"
+description: "Le cadre de la simulation : ce que l'on suppose, la trajectoire de référence à politique inchangée et le périmètre retenu."
+fil: [["Dossier", "/dossier/"], ["L'hypothèse", false]]
+permalink: /dossier/hypothese/
+---
+{%- set B = sim.base -%}{%- set R = sim.pmc -%}
+<p class="chapo">La question posée est volontairement maximaliste : que se passerait-il si la Belgique appliquait toutes les mesures du catalogue publié par le Bureau fédéral du Plan, en 2027 et en 2028, puis les gardait ? L'exercice n'est pas une recommandation. C'est un instrument de mesure.</p>
+
+<h2>Le point de départ</h2>
+<p>Le 17 avril 2026, le gouvernement fédéral a demandé au Bureau fédéral du Plan (BFP) de lui proposer, pour le 1<sup>er</sup> juin, des options concrètes pour réduire le déficit. Le BFP a consulté la Banque nationale, le secrétariat du Conseil central de l'économie, le Centre fédéral d'expertise des soins de santé (KCE), le Conseil supérieur des Finances et des universitaires. Il a aussi repris les mesures des programmes électoraux de 2024 dont il avait estimé l'impulsion budgétaire à au moins 500 millions d'euros en 2029.</p>
+<p>Le résultat est un rapport d'une vingtaine de pages, accompagné d'un classeur de {{ sim.stats.total }} mesures. Le BFP le présente comme un inventaire, sans hiérarchie : « nous ne privilégions aucune mesure par rapport à une autre ». Il rappelle aussi que « l'analyse économique ne saurait se substituer au processus démocratique dans les choix de politiques publiques » (<a href="{{ sim.sourcesParCle['bfp-rapport'].url }}">rapport 13320</a>, p. 2 et 19).</p>
+
+<h2>L'hypothèse retenue</h2>
+<div class="encadre">
+  <span class="encadre-titre">Lecture de « tout adopter pendant deux ans »</span>
+  <p>Toutes les mesures sont votées pour entrer en vigueur au 1<sup>er</sup> janvier 2027. On fait le bilan à la fin de 2028, puis on suppose qu'elles restent en place jusqu'en 2031, pour juger de la soutenabilité.</p>
+</div>
+<p>Trois précisions en découlent :</p>
+<ul>
+  <li><strong>Voter n'est pas percevoir.</strong> L'expérience de pensée suppose que le Parlement adopte tout d'un coup. Les délais physiques restent, eux, incompressibles. Un impôt sur le patrimoine exige un cadastre qui n'existe pas. Une globalisation des revenus mobiliers n'est perçue qu'à l'enrôlement de l'année suivante. Une norme de croissance des soins de santé produit ses économies année après année. Chaque fiche indique donc une montée en charge : la part du rendement perçue en 2027 et en 2028.</li>
+  <li><strong>« Tout » doit d'abord être rendu possible.</strong> Le catalogue se contredit en plusieurs points. Il propose aussi plusieurs variantes pour la même assiette. Le <a href="/dossier/contradictions/">chapitre 3</a> explique comment on en tire un « paquet maximal cohérent ».</li>
+  <li><strong>Les mesures coûteuses sont incluses.</strong> Le catalogue contient aussi des baisses de prélèvements sur le travail, des crédits d'impôt remboursables et l'extension de certains avantages. Elles font partie des 263 et entrent dans le paquet quand elles ne contredisent rien.</li>
+</ul>
+
+<h2>La trajectoire de référence</h2>
+<p>Tout se mesure par rapport à ce qui se passerait sans les mesures, c'est-à-dire à politique inchangée. Le site reprend les projections publiées en juin 2026 :</p>
+<ul>
+  <li><strong>2025 à 2028 :</strong> projections de la Banque nationale (BNB) ;</li>
+  <li><strong>2031 :</strong> projections du BFP ;</li>
+  <li><strong>2029 et 2030 :</strong> interpolation entre les deux.</li>
+</ul>
+<p>Ces projections intègrent les mesures déjà décidées, dont l'accord budgétaire du 24 novembre 2025. Elles n'intègrent aucun budget 2027, qui n'est toujours pas voté.</p>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">À politique inchangée</th>{% for a in B.annees %}<th scope="col" class="n">{{ a }}</th>{% endfor %}</tr></thead>
+  <tbody>
+    <tr><th scope="row">Croissance du PIB en volume (%)</th>{% for v in B.croissanceReelle %}<td class="n">{{ v | num(1) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">Solde public (% du PIB)</th>{% for v in B.solde %}<td class="n">{{ v | num(1) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">Solde primaire (% du PIB)</th>{% for v in B.soldePrimaire %}<td class="n">{{ v | num(1) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">Charges d'intérêts (% du PIB)</th>{% for i in range(0, B.annees.length) %}<td class="n">{{ (B.soldePrimaire[i] - B.solde[i]) | num(1) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">Dette publique (% du PIB)</th>{% for v in B.dette %}<td class="n">{{ v | num(1) }}</td>{% endfor %}</tr>
+    <tr><th scope="row">PIB nominal (Md€)</th>{% for a in B.annees %}<td class="n">{{ sim.refPib[a] | num(0) }}</td>{% endfor %}</tr>
+  </tbody>
+</table></div>
+<p class="note-bas">Sources : Eurostat (2025), BNB (juin 2026), BFP (juin 2026). Les valeurs 2029-2030 sont interpolées par le site, et le déflateur du PIB est une hypothèse du site. Voir la <a href="/methode/">méthode</a>.</p>
+<p>Le tableau montre l'essentiel. Le déficit primaire, hors intérêts, reste à peu près stable autour de 2,7 à 2,9 % du PIB. C'est la <strong>charge d'intérêts</strong> qui creuse le déficit total : elle passe de {{ (B.soldePrimaire[0] - B.solde[0]) | num(1) }} % du PIB en 2025 à {{ (B.soldePrimaire[6] - B.solde[6]) | num(1) }} % en 2031, à mesure que la dette contractée à taux bas est refinancée à 3,5 % ou 4 %. Le BFP résume la situation : sans ces intérêts, le déficit respecterait en 2029 la norme européenne de 3 %. Sa conclusion : il vaut mieux agir tôt que tard.</p>
+<p>Pour la seule Entité I (pouvoir fédéral et sécurité sociale), le Comité de monitoring estimait en juillet 2026 le déficit à {{ B.entiteI.deficit2026.pctPib | num(1) }} % du PIB en 2026, puis {{ B.entiteI.deficit2029.pctPib | num(1) }} % en 2029. Il évaluait l'effort minimal à {{ B.entiteI.effortMinimal2029 | num(1) }} Md€ d'ici 2029 et précisait qu'il en faudrait environ le double pour revenir à 3 %. La majorité s'est fixé un objectif de 10 Md€ sans parvenir à le traduire en mesures (voir le <a href="/contexte/">contexte</a>).</p>
+
+<h2>Le périmètre : toutes les administrations publiques</h2>
+<p>Le catalogue vise le budget fédéral et la sécurité sociale. La soutenabilité de la dette et les règles européennes portent pourtant sur l'ensemble des administrations publiques : pouvoir fédéral, sécurité sociale, Communautés, Régions et pouvoirs locaux.</p>
+<p>Le site raisonne donc sur cet ensemble. Une mesure qui se contente de reporter une charge du fédéral vers les Régions, comme une baisse des dotations de la loi de financement, améliore le budget fédéral sans améliorer forcément le solde de l'ensemble. On ne compte alors que la part que les Régions répercuteraient en économies : {{ (sim.hyp.repercussionRegions.valeur * 100) | num(0) }} % au scénario central, un paramètre réglable dans le <a href="/simulateur/">simulateur</a>.</p>
+
+<h2>Ce que l'on mesure</h2>
+<ul>
+  <li><strong>La cohérence :</strong> ce qui peut coexister (chapitre 3).</li>
+  <li><strong>Le rendement :</strong> mesure par mesure, avec un niveau de confiance de A à E (chapitres 2 et 4).</li>
+  <li><strong>L'effet macroéconomique :</strong> croissance, emploi, stabilisateurs automatiques, charges d'intérêts (chapitre 5).</li>
+  <li><strong>L'incidence :</strong> qui paie, en revenu et en services (<a href="/incidence/">module dédié</a>).</li>
+  <li><strong>La faisabilité :</strong> compétence, véhicule juridique, délai réaliste (chapitre 6).</li>
+</ul>
+<p>Un dernier rappel : {{ (100 - (sim.stats.parGrade.A + sim.stats.parGrade.B) / sim.stats.total * 100) | num(0) }} % des fiches reposent sur une estimation du site (confiance C, D ou E) ou n'ont aucun effet chiffrable. Les {{ sim.stats.chiffrees }} montants du BFP couvrent l'essentiel des grandes recettes de capital, mais pas la TVA, l'indexation, la fonction publique ni les entités fédérées. Le simulateur permet de s'en tenir aux montants du BFP.</p>

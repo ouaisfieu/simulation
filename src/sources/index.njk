@@ -1,0 +1,34 @@
+---
+layout: layouts/base.njk
+nav: sources
+title: "Sources"
+description: "Les sources utilisées par le site : rapport et classeur du Bureau fédéral du Plan, projections de la BNB, Comité de monitoring, Commission européenne, études et presse."
+fil: [["Sources", false]]
+---
+{%- set groupes = [
+  ["Le catalogue", "Le rapport, le classeur et l'origine des montants.", ["bfp-rapport", "bfp-classeur", "dc2024"]],
+  ["Projections et finances publiques", "La trajectoire de référence, les avis officiels et le cadre européen.", ["bnb-juin-2026", "bfp-juin-2026", "bfp-fevrier-2026", "bnb-dec-2025", "cm-juillet-2026", "cm-mars-2026", "eurostat-avril-2026", "ce-printemps-2026", "ce-csr-2026", "conseil-edp-2025", "cdc-budget-2026"]],
+  ["Actualité budgétaire et marchés", "La négociation de 2025-2026, telle que rapportée par la presse.", ["lavenir-accord-2025", "rtbf-bnb-juin", "rtbf-pistes-2026", "dh-bouton-urgence", "lalibre-spread", "lalibre-sp", "lavenir-douziemes", "lavenir-roi", "economiematin-roi"]],
+  ["Assiettes et chiffrages", "Les grandeurs utilisées pour les estimations du site.", ["oeccbb-quotite", "pm-plusvalues", "bfp-wp-voitures", "nbb-dwa-2024", "lespecialiste-invalidite"]],
+  ["Revenus, patrimoine et pauvreté", "", ["silc-2025", "iweps-gini", "bam-patrimoine-2026"]],
+  ["Macroéconomie, histoire et comparaisons", "Les paramètres du modèle et les précédents.", ["imf-weo-2012", "blanchard-leigh-2013", "mourre-poissonnier-2019", "nbb-2014-consolidation", "nbb-2015-assainissement", "imf-greece-2013", "ifac-2014", "imf-ireland", "ec-portugal-2016", "te-portugal-2013"]],
+  ["Mobilisation sociale", "", ["csc-appel-2025", "bt-manif-2026"]],
+  ["Projets liés", "Utilisés après vérification, voir la page Projets liés.", ["conclave", "sociopo", "appel-de-novembre"]]
+] -%}
+<div class="prose">
+  <h1>Sources</h1>
+  <p class="chapo">Les {{ sim.sources | length }} sources du site, regroupées par usage. Chaque chiffre affiché renvoie à l'une d'elles, ou à une estimation du site dont la justification figure sur la fiche concernée.</p>
+  <p>Le document de référence est le rapport du Bureau fédéral du Plan et son classeur de données. Le site n'a pas pu télécharger le classeur directement depuis le site du BFP. Il en a utilisé la copie publiée dans le dépôt public du projet <a href="https://ouaisfieu.github.io/sims/conclave/mesures/">Fumée blanche</a>, et l'a recoupée avec les fourchettes et les exemples chiffrés du rapport. L'empreinte du fichier figure dans les <a href="/donnees/">données</a>.</p>
+</div>
+{%- for g in groupes %}
+<section>
+  <h2>{{ g[0] }}</h2>
+  {% if g[1] %}<p class="muet">{{ g[1] }}</p>{% endif %}
+  <ol class="liste-sources">
+  {%- for cle in g[2] %}{% set s = sim.sourcesParCle[cle] %}
+    <li id="src-{{ cle }}"><a href="{{ s.url }}">{{ s.titre }}</a>. <span class="muet">{{ s.auteur }}{% if s.date %}, {{ s.date | dateFr }}{% endif %}.</span><br><span class="petit">{{ s.usage }}</span></li>
+  {%- endfor %}
+  </ol>
+</section>
+{%- endfor %}
+<p class="note-bas">Adresses relevées en novembre 2026. Les articles de presse sont cités pour les faits qu'ils rapportent, pas pour leurs analyses.</p>

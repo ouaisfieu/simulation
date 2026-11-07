@@ -1,0 +1,39 @@
+---
+layout: layouts/base.njk
+nav: contradictions
+title: "La carte des contradictions"
+description: "Les mesures du catalogue budgétaire 2027 qui s'excluent mutuellement, les variantes concurrentes et les tensions, avec la manière dont le site les tranche."
+fil: [["Contradictions", false]]
+---
+<div class="prose">
+  <h1>La carte des contradictions</h1>
+  <p class="chapo">Le catalogue réunit les idées de dizaines d'auteurs qui ne se sont pas concertés. Certaines s'annulent. Cette page les recense, avec la règle appliquée dans le paquet maximal cohérent. Le raisonnement complet figure au <a href="/dossier/contradictions/">chapitre 3 du dossier</a>.</p>
+</div>
+
+<h2>Contradictions directes</h2>
+<div class="grille-cartes">
+{%- for c in sim.contradictions %}
+  <section class="carte">
+    <span class="meta">{{ c.sujet }}</span>
+    <p>{{ c.texte }}</p>
+    <p class="petit"><strong>D'un côté :</strong> {% for i in c.a %}<a href="/mesures/{{ sim.parId[i].slug }}/">{{ sim.parId[i].ref }}</a> {{ sim.parId[i].t }}{% if not loop.last %} ; {% endif %}{% endfor %}</p>
+    <p class="petit"><strong>De l'autre :</strong> {% for i in c.b %}<a href="/mesures/{{ sim.parId[i].slug }}/">{{ sim.parId[i].ref }}</a> {{ sim.parId[i].t }}{% if not loop.last %} ; {% endif %}{% endfor %}</p>
+    <p class="petit muet">{% if c.perdants | length %}Paquet cohérent : {% for i in c.perdants %}{{ sim.parId[i].ref }}{% if not loop.last %}, {% endif %}{% endfor %} écartée{% if c.perdants | length > 1 %}s{% endif %} (camp minoritaire du catalogue).{% else %}Paquet cohérent : une seule variante est retenue dans la famille.{% endif %}</p>
+  </section>
+{%- endfor %}
+</div>
+
+<h2>Familles exclusives : une seule variante à la fois</h2>
+<div class="tableau-defilant"><table>
+  <thead><tr><th scope="col">Famille</th><th scope="col" class="n">Variantes</th><th scope="col">Paquet maximal</th><th scope="col">Paquet médian</th></tr></thead>
+  <tbody>
+  {%- for f in sim.familles %}{% if f.mode == "exclusif" and f.membres | length > 1 %}
+    <tr><td><a href="/familles/{{ f.slug }}/">{{ f.code }}</a> · {{ f.label }}</td><td class="n">{{ f.membres | length }}</td>
+      <td>{% set ch = f.choixPmc %}{% if ch == "aucune" or ch === undefined %}—{% elif ch.length %}{% for i in ch %}{{ sim.parId[i].ref }}{% if not loop.last %} + {% endif %}{% endfor %}{% else %}<a href="/mesures/{{ sim.parId[ch].slug }}/">{{ sim.parId[ch].ref }}</a>{% endif %}</td>
+      <td>{% set ch = f.choixMed %}{% if ch == "aucune" or ch === undefined %}—{% elif ch.length %}{% for i in ch %}{{ sim.parId[i].ref }}{% if not loop.last %} + {% endif %}{% endfor %}{% else %}<a href="/mesures/{{ sim.parId[ch].slug }}/">{{ sim.parId[ch].ref }}</a>{% endif %}</td></tr>
+  {%- endif %}{% endfor %}
+  </tbody>
+</table></div>
+
+<h2>Tensions</h2>
+<ul class="prose">{% for t in sim.tensions %}<li>{{ t.texte }} — {% for i in t.ids %}<a href="/mesures/{{ sim.parId[i].slug }}/">{{ sim.parId[i].ref }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</li>{% endfor %}</ul>

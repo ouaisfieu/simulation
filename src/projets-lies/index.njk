@@ -1,0 +1,83 @@
+---
+layout: layouts/base.njk
+nav: projets
+title: "Projets liés"
+description: "Fumée blanche, Sociopo, Appel de novembre et le Budget Arizona : ce que sont ces projets, comment ce site les utilise et ce que leur vérification a montré."
+fil: [["Projets liés", false]]
+---
+{%- set CA = sim.conclaveAnalyse -%}
+{%- set nCompat = 0 -%}{%- for x in CA %}{% if x.montant >= x.est.bas and x.montant <= x.est.haut %}{% set nCompat = nCompat + 1 %}{% endif %}{% endfor -%}
+<div class="prose">
+  <h1>Projets liés</h1>
+  <p class="chapo">Trois projets citoyens publiés sous le nom Ouaisfieu abordent le même sujet sous d'autres angles : un simulateur du conclave budgétaire, une encyclopédie de la sociopolitique belge et un site de mobilisation. Ce site les utilise et y renvoie. Il les a d'abord vérifiés, comme toute autre source.</p>
+</div>
+
+<section class="projet" id="fumee-blanche">
+  <h2><a href="https://ouaisfieu.github.io/sims/conclave/mesures/">Fumée blanche</a> : le conclave et les 263 mesures</h2>
+  <p>Un simulateur du conclave budgétaire fédéral : il s'agit de trouver 10 milliards sans faire tomber le gouvernement, en tenant compte des lignes rouges publiques des cinq partis de la coalition. Il l'accompagne d'un inventaire des 263 mesures du catalogue, avec une fiche par mesure, une traduction française des intitulés néerlandais et une lecture critique.</p>
+  <p><strong>Ce que ce site en fait.</strong> Chaque fiche de mesure renvoie à la fiche correspondante de Fumée blanche ({{ sim.liens.conclave | length }} liens, tous vérifiés). Le classeur de données du BFP a été repris de son dépôt public, puis recoupé avec le rapport. Ses estimations propres ont été confrontées à celles du site.</p>
+  <div class="verif">
+    <h3>Ce que la vérification a montré</h3>
+    <ul>
+      <li>Le classeur publié dans le dépôt est cohérent avec le rapport du BFP : 263 lignes, 39 montants issus du chiffrage des programmes de 2024, en-têtes bilingues.</li>
+      <li><strong>Un décompte à corriger.</strong> La page d'inventaire indique que « 54 de ces mesures portent un montant ». Ce chiffre additionne les 39 montants du BFP et les 15 estimations propres du projet, marquées « analyse ». Ailleurs, le projet parle bien de 39 mesures chiffrées. La description de la page d'accueil évoque pourtant « 263 mesures chiffrées par le Bureau fédéral du Plan ».</li>
+      <li><strong>Les 15 estimations « analyse ».</strong> {{ nCompat }} se situent dans la fourchette du site, souvent parce que le site les a reprises après contrôle. {{ CA.length - nCompat }} posent problème : elles chiffrent une mesure que le texte du classeur ne permet pas de chiffrer ainsi (tableau ci-dessous).</li>
+    </ul>
+  </div>
+</section>
+
+<div class="tableau-defilant"><table>
+  <caption class="muet petit">Estimations « analyse » de Fumée blanche et estimations du site, en millions d'euros (impulsion en 2029).</caption>
+  <thead><tr><th scope="col">Mesure</th><th scope="col" class="n">Fumée blanche</th><th scope="col" class="n">Ce site (central)</th><th scope="col" class="n">Fourchette du site</th><th scope="col">Confiance</th><th scope="col">Remarque</th></tr></thead>
+  <tbody>
+  {%- for x in CA %}{% set horsFourchette = x.montant < x.est.bas or x.montant > x.est.haut %}
+    <tr><td><a href="/mesures/{{ x.slug }}/">{{ x.ref }}</a> {{ x.t }}<br><a class="petit" href="{{ x.url }}">« {{ x.titre }} »</a></td>
+      <td class="n{% if horsFourchette %} ecart-fort{% endif %}">{{ x.montant | num(0) }}</td>
+      <td class="n">{{ x.est.central | num(0) }}</td>
+      <td class="n">{{ x.est.bas | num(0) }} à {{ x.est.haut | num(0) }}</td>
+      <td>{% if x.gr != "—" %}<span class="badge g{{ x.gr }}">{{ x.gr }}</span>{% else %}—{% endif %}</td>
+      <td class="petit">{% if x.remarque %}{{ x.remarque }}{% else %}Compatible. Dans le paquet maximal : {{ x.statutPmc }}.{% endif %}</td></tr>
+  {%- endfor %}
+  </tbody>
+</table></div>
+
+<section class="projet" id="sociopo">
+  <h2><a href="https://ouaisfieu.github.io/sociopo/">Sociopo</a> : l'encyclopédie de la sociopolitique belge</h2>
+  <p>Une encyclopédie libre, interactive et sans traceur : institutions, fédéralisme, partis, élections, concertation sociale, finances publiques et histoire politique de 1830 à 2026. Elle compte 908 entrées reliées (592 notions, 42 partis, 146 personnalités, 76 gouvernements, 37 scrutins et 15 dossiers), avec leurs équivalents en néerlandais, en allemand et en anglais, des simulateurs et des quiz. Textes sous licence CC BY 4.0, code sous licence MIT.</p>
+  <p><strong>Ce que ce site en fait.</strong> Le glossaire, les fiches de famille et les pages de contexte renvoient à {{ sim.liens.sociopo | length }} notices de Sociopo. L'existence de chacune a été vérifiée dans les sources publiques du projet. Le dossier <a href="https://ouaisfieu.github.io/sociopo/dossiers/dette-et-austerite/">Dette et austérité</a> prolonge la page sur le <a href="/precedent-1993-2000/">précédent de 1993-2000</a>.</p>
+  <div class="verif">
+    <h3>Ce que la vérification a montré</h3>
+    <ul>
+      <li>Les notices consultées sont cohérentes avec les sources primaires utilisées ici : plan global de 1993, indice santé, loi de 1996, procédure de déficit excessif, douzièmes provisoires.</li>
+      <li><strong>Un décompte à corriger.</strong> La description de la page d'accueil annonce « plus de mille entrées », alors que l'accueil lui-même en compte 908.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="projet" id="appel-de-novembre">
+  <h2><a href="https://ouaisfieu.github.io/appel-de-novembre/">Appel de novembre</a> : la mobilisation sociale</h2>
+  <p>Un site de mobilisation pour la manifestation nationale du lundi 23 novembre 2026 à Bruxelles, à l'appel de la FGTB, de la CSC et de Synova. Il retrace la contestation depuis les trois jours de grève de novembre 2025 et propose des dossiers, des alternatives budgétaires et un agenda. Son point de vue est engagé et revendiqué.</p>
+  <p><strong>Ce que ce site en fait.</strong> Il le cite comme source sur la mobilisation sociale, en attribuant ses positions à leurs auteurs. Les dates ont été recoupées avec la CSC pour 2025 et avec la presse pour 2026.</p>
+  <div class="verif">
+    <h3>Ce que la vérification a montré</h3>
+    <ul>
+      <li>Les dates sont exactes : grèves des 24, 25 et 26 novembre 2025, manifestation du 23 novembre 2026. Le site corrige lui-même une erreur fréquente qui date l'« Appel de novembre » de 2026.</li>
+      <li><strong>Une réserve à reprendre partout.</strong> Le chiffre de « plus de 130 000 » exclus du chômage entre janvier et juillet 2026 est présenté comme une estimation patronale dans le bloc de chiffres et sur la page des sources. Le texte d'accueil et la description de partage le reprennent sans cette réserve.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="projet" id="budget-arizona">
+  <h2><a href="https://ouaisfieu.github.io/arizona/budget/">Le Budget Arizona</a> : le dossier chiffré 2025-2029</h2>
+  <p>Signalé par Sociopo, ce dossier du même auteur suit le budget de la coalition chiffre par chiffre. Il confronte les annonces du gouvernement aux corrections de la Cour des comptes, de la BNB et du Comité de monitoring. Sa dernière mise à jour date du 25 juillet 2026.</p>
+  <div class="verif">
+    <h3>Ce que la vérification a montré</h3>
+    <ul>
+      <li>Certains chiffres datent d'avant les révisions récentes. Le déficit de 2025 y figure à 5,3 % du PIB, d'après les prévisions d'automne 2025 de la Commission. Eurostat l'a depuis établi à 5,2 % (avril 2026). La crise d'octobre-novembre 2026 n'y est pas encore traitée.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="prose">
+  <p class="note-bas">Vérifications effectuées le {{ maj | dateFr }} sur les pages publiées et les dépôts publics des projets. Ce site n'a pas modifié ces projets : les points relevés ci-dessus sont des suggestions de correction.</p>
+</div>

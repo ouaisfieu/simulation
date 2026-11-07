@@ -1,0 +1,33 @@
+---
+permalink: /llms.txt
+eleventyExcludeFromCollections: true
+---
+# Et si la Belgique adoptait les 263 mesures ?
+
+> Encyclopédie et simulateur citoyens, indépendants de toute institution. Le site examine l'hypothèse selon laquelle la Belgique adopterait, en 2027 et 2028 puis de façon durable, l'ensemble des {{ sim.stats.total }} mesures du catalogue « Options de politiques pour l'élaboration du budget 2027 » publié par le Bureau fédéral du Plan (BFP) en juin 2026. Situation au {{ maj | dateFr }}.
+
+Points clés (scénario central, « paquet maximal cohérent ») :
+
+- Adopter « tout » est logiquement impossible : le catalogue contient des variantes concurrentes et {{ sim.stats.contradictions }} contradictions directes. Le site construit donc un paquet maximal cohérent ({{ sim.stats.pmcActives }} mesures actives).
+- La somme naïve des {{ sim.stats.chiffrees }} montants chiffrés par le BFP est de {{ (sim.stats.naif / 1000) | num(1) }} Md€, mais elle additionne des variantes incompatibles et des ventes d'actifs.
+- Rendement brut du paquet : {{ sim.pmc.brut[2028] | num(1) }} Md€ en 2028 et {{ sim.pmc.brut[2029] | num(1) }} Md€ en régime (2029).
+- Solde public : {{ sim.pmc.solde[2028] | num(1) }} % du PIB en 2028 (référence {{ sim.pmc.soldeRef[2028] | num(1) }} %), dette de {{ sim.pmc.dette[2031] | num(1) }} % du PIB en 2031 (référence {{ sim.pmc.detteRef[2031] | num(1) }} %).
+- Activité : PIB inférieur de {{ (sim.pmc.ecartPib[2028] | abs) | num(1) }} % à la référence en 2028, environ {{ (sim.pmc.emploi[2028] | abs) | num(0) }} 000 emplois de moins.
+- Fourchette du solde 2028 selon les hypothèses : de {{ sim.budgetBas.solde[2028] | num(1) }} % à {{ sim.budgetHaut.solde[2028] | num(1) }} % du PIB.
+- Toutes les estimations non officielles portent un niveau de confiance (A à E) ; le filtre « BFP seul » ne garde que les montants du BFP.
+
+## Pages principales
+
+- [Le dossier central](https://ouaisfieu.github.io/simulation/dossier/) : huit chapitres, de l'hypothèse à la soutenabilité.
+- [Le simulateur](https://ouaisfieu.github.io/simulation/simulateur/) : choix des variantes, hypothèses macroéconomiques, résultats 2027-2031.
+- [Les 263 mesures](https://ouaisfieu.github.io/simulation/mesures/) : une fiche par mesure (texte original du classeur, traduction, chiffrage gradé).
+- [Les familles](https://ouaisfieu.github.io/simulation/familles/) et [les contradictions](https://ouaisfieu.github.io/simulation/contradictions/).
+- [Qui paie ?](https://ouaisfieu.github.io/simulation/incidence/), [le précédent de 1993-2000](https://ouaisfieu.github.io/simulation/precedent-1993-2000/), [les comparaisons européennes](https://ouaisfieu.github.io/simulation/comparaisons/).
+- [Contexte](https://ouaisfieu.github.io/simulation/contexte/), [méthode](https://ouaisfieu.github.io/simulation/methode/), [sources](https://ouaisfieu.github.io/simulation/sources/), [glossaire](https://ouaisfieu.github.io/simulation/glossaire/).
+
+## Données
+
+- [Toutes les mesures en CSV](https://ouaisfieu.github.io/simulation/donnees/fichiers/export/mesures.csv) et [en JSON](https://ouaisfieu.github.io/simulation/donnees/fichiers/export/mesures.json).
+- [Hypothèses du modèle](https://ouaisfieu.github.io/simulation/donnees/fichiers/hypotheses.json), [trajectoire de référence](https://ouaisfieu.github.io/simulation/donnees/fichiers/base.json).
+
+Textes et données : CC BY 4.0. Code : MIT. Source primaire : Bureau fédéral du Plan, rapport 13320 et classeur DATA_BUDGET2027_13320.xlsx.
